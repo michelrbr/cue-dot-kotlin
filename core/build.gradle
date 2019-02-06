@@ -2,6 +2,13 @@ apply plugin: 'kotlin'
 
 dependencies {
 
-    //kotlin
+    // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    // RX
+    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+
+    // Test
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
 }

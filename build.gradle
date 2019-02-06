@@ -1,15 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    // Kotlin
     ext.kotlinVersion = '1.3.20'
+
+    // RX
+    ext.rxjavaVersion = "2.2.6"
+
+    // Android
     ext.gradlePluginVersion = '3.3.0'
     ext.androidSdkVersion = 28
     ext.androidMinSdkVersion = 21
     ext.appcompatVersion = '28.0.0'
     ext.constraintLayoutVersion = '1.1.3'
+
+    // Test
     ext.junitVersion = '4.12'
     ext.testRunnerVersion = '1.0.2'
     ext.espressoVersion = '3.0.2'
+    ext.mockkVersion = "1.9.kotlin12"
 
     repositories {
         google()
