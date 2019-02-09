@@ -10,6 +10,7 @@ class GetMoviesOrderedBy(
 ) {
 
     fun execute(orderBy: Order, page: Int): Observable<Event<MovieList>> {
+
         return Observable.concat(Observable.just(Event.loading()), getMoviesOrderedBy(orderBy, page))
     }
 

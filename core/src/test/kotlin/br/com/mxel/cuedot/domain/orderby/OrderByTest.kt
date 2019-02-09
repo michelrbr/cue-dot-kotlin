@@ -37,7 +37,7 @@ class OrderByTest {
         getMoviesOrderedBy.execute(Order.POPULAR, 1)
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { it is Event.Data && it.data == expectedMovieList }
+                .assertValueAt(1) { (it as Event.Data).data == expectedMovieList }
     }
 
     @Test
@@ -58,6 +58,6 @@ class OrderByTest {
         getMoviesOrderedBy.execute(Order.NOW_PLAYING, 0)
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { it is Event.Error && it.error is IllegalArgumentException }
+                .assertValueAt(1) { (it as Event.Error).error is IllegalArgumentException }
     }
 }
