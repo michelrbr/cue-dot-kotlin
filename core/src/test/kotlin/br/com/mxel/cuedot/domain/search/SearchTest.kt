@@ -1,4 +1,4 @@
-package br.com.mxel.cuedot.domain.orderby
+package br.com.mxel.cuedot.domain.search
 
 import br.com.mxel.cuedot.domain.BaseTest
 import br.com.mxel.cuedot.domain.Event
@@ -9,44 +9,32 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.reactivex.Single
 import org.junit.Test
 
-class OrderByTest : BaseTest() {
+class SearchTest: BaseTest() {
 
     @RelaxedMockK
-    lateinit var repository: IOrderedByRepository
+    lateinit var repository: ISearchRepository
 
     @InjectMockKs
-    lateinit var getMoviesOrderedBy: GetMoviesOrderedBy
+    lateinit var searchMovie: SearchMovie
 
     @Test
     fun shouldGetMoviesOrderedBy() {
 
         val expectedMovieList = MovieList(1, 3, 1, null)
 
-        every { repository.getMoviesOrderedBy(any(), any()) } returns
+        every { repository.searchMovie(any()) } returns
                 Single.just(expectedMovieList)
 
-        getMoviesOrderedBy.execute(Order.POPULAR, 1)
+        searchMovie.execute("test")
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
                 .assertValueAt(1) { (it as Event.Data).data == expectedMovieList }
     }
 
     @Test
-    fun shouldGetError() {
+    fun shouldGetArgumentError() {
 
-        every { repository.getMoviesOrderedBy(any(), any()) } returns
-                Single.error(Throwable("Testing"))
-
-        getMoviesOrderedBy.execute(Order.NOW_PLAYING, 1)
-                .test()
-                .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { it is Event.Error }
-    }
-
-    @Test
-    fun shouldGetPageError() {
-
-        getMoviesOrderedBy.execute(Order.NOW_PLAYING, 0)
+        searchMovie.execute("")
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
                 .assertValueAt(1) { (it as Event.Error).error is IllegalArgumentException }

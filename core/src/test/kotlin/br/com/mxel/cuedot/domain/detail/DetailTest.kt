@@ -1,30 +1,21 @@
 package br.com.mxel.cuedot.domain.detail
 
+import br.com.mxel.cuedot.domain.BaseTest
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.Movie
-import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.unmockkAll
 import io.reactivex.Single
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 
-class DetailTest {
+class DetailTest : BaseTest() {
 
     @RelaxedMockK
     lateinit var repository: IMovieDetailRepository
 
     @InjectMockKs
     lateinit var getMovieDetail: GetMovieDetail
-
-    @Before
-    fun setup() = MockKAnnotations.init(this)
-
-    @After
-    fun shutdown() = unmockkAll()
 
     @Test
     fun shouldGetMovieDetail() {
@@ -41,7 +32,7 @@ class DetailTest {
     }
 
     @Test
-    fun shouldGetPageError() {
+    fun shouldGetArgumentError() {
 
         getMovieDetail.execute(0)
                 .test()
