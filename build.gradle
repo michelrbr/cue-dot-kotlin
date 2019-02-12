@@ -22,7 +22,7 @@ buildscript {
 
     // HTTP Networking
     ext.okhttpVersion = "3.11.0"
-    ext.gsonVersion = "2.8.5"
+    ext.moshiVersion = "1.8.0"
     ext.retrofitVersion = "2.4.0"
 
     repositories {
