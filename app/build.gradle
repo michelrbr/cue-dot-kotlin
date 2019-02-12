@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion androidSdkVersion
@@ -25,12 +26,38 @@ android {
 }
 
 dependencies {
-
     implementation project(':core')
 
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+
+    // Android
     implementation "com.android.support:appcompat-v7:$appcompatVersion"
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
+    implementation "com.android.support:design:$androidSupportVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$androidxLifecycleVersion"
+
+    // RX
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
+
+    // Log
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // HTTP Networking
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
+    // DI
+    implementation "org.koin:koin-core:$koinVersion"
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-android-viewmodel:$koinVersion"
+    implementation "org.koin:koin-android-scope:$koinVersion"
+    implementation "org.koin:koin-test:$koinVersion"
+
+    // Test
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
