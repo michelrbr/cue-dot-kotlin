@@ -20,6 +20,11 @@ buildscript {
     ext.espressoVersion = '3.0.2'
     ext.mockkVersion = "1.9.kotlin12"
 
+    // HTTP Networking
+    ext.okhttpVersion = "3.11.0"
+    ext.gsonVersion = "2.8.5"
+    ext.retrofitVersion = "2.4.0"
+
     repositories {
         google()
         jcenter()

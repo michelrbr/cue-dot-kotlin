@@ -1,6 +1,6 @@
 package br.com.mxel.cuedot.domain.entity
 
-class MovieList(
+data class MovieList(
         val page: Int,
         val totalResults: Int,
         val totalPages: Int,
