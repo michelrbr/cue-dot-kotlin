@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Cue dot</string>
+    <string name="order_by">Order by:</string>
+    <string name="movie_cover">Movie cover</string>
+    <string name="movie_backdrop">Movie backdrop</string>
+
+    <string name="most_popular">Most popular</string>
+    <string name="highest_rated">Highest rated</string>
+    <string name="now_playing">Now playing</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="favorites">Favorites</string>
+
+    <array name="order_by_list">
+        <item>@string/most_popular</item>
+        <item>@string/highest_rated</item>
+        <item>@string/now_playing</item>
+        <item>@string/upcoming</item>
+        <item>@string/favorites</item>
+    </array>
 </resources>

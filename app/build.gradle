@@ -17,6 +17,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -32,12 +37,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
     // Android
-    implementation "com.android.support:appcompat-v7:$appcompatVersion"
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
-    implementation "com.android.support:design:$androidSupportVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleVersion"
-    kapt "androidx.lifecycle:lifecycle-compiler:$androidxLifecycleVersion"
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidSupportVersion"
+    implementation "com.google.android.material:material:$androidSupportVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidLifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$androidLifecycleVersion"
 
     // RX
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
@@ -56,6 +61,8 @@ dependencies {
     implementation "org.koin:koin-android-viewmodel:$koinVersion"
     implementation "org.koin:koin-android-scope:$koinVersion"
     implementation "org.koin:koin-test:$koinVersion"
+    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
+    kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
     // Test
     testImplementation "junit:junit:$junitVersion"
