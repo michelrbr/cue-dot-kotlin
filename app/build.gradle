@@ -46,14 +46,9 @@ dependencies {
 
     // RX
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
 
     // Log
     implementation "com.jakewharton.timber:timber:$timberVersion"
-
-    // HTTP Networking
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
     // DI
     implementation "org.koin:koin-core:$koinVersion"
