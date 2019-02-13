@@ -35,6 +35,7 @@ buildscript {
     ext.okhttpVersion = "3.11.0"
     ext.moshiVersion = "1.8.0"
     ext.retrofitVersion = "2.4.0"
+    ext.picassoVersion = "2.71828"
 
     repositories {
         google()

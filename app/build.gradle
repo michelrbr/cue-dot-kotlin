@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+def props = new Properties()
+try {
+    def propsFile = rootProject.file('local.properties')
+    props.load(new FileInputStream(propsFile))
+} catch (ignored) {
+    props['apiKey'] = '~'
+}
+
 android {
     compileSdkVersion androidSdkVersion
     defaultConfig {
@@ -11,6 +19,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "API_KEY", props['apiKey']
     }
 
     sourceSets {
@@ -58,6 +68,9 @@ dependencies {
     implementation "org.koin:koin-test:$koinVersion"
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+
+    // HTTP
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
 
     // Test
     testImplementation "junit:junit:$junitVersion"

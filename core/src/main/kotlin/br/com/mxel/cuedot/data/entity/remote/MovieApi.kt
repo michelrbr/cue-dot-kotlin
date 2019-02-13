@@ -1,5 +1,6 @@
 package br.com.mxel.cuedot.data.entity.remote
 
+import br.com.mxel.cuedot.data.remote.ApiProvider
 import br.com.mxel.cuedot.domain.entity.Movie
 import com.squareup.moshi.Json
 
@@ -22,8 +23,8 @@ data class MovieApi(
     fun toMovie() = Movie(
             id,
             title,
-            posterPath,
-            backdropPath,
+            String.format("%s/%s%s",ApiProvider.IMAGES_BASE_PATH, ApiProvider.POSTER_SIZE, posterPath),
+            String.format("%s/%s%s",ApiProvider.IMAGES_BASE_PATH, ApiProvider.BACKDROP_SIZE, backdropPath),
             overview,
             voteAverage,
             releaseDate,

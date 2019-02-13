@@ -15,6 +15,5 @@
         <item>@string/highest_rated</item>
         <item>@string/now_playing</item>
         <item>@string/upcoming</item>
-        <item>@string/favorites</item>
     </array>
 </resources>
