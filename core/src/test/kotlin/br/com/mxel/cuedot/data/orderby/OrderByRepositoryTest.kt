@@ -15,8 +15,10 @@ class OrderByRepositoryTest: BaseTest() {
     val interceptor = TestInterceptor()
 
     val orderedByClient = RemoteClientFactory(
-            "https://api.themoviedb.org",
-            null, interceptor, false).createClient(IOrderedByClient::class)
+            null,
+            interceptor,
+            false
+    ).createClient(IOrderedByClient::class)
 
     val apiVersion = "3"
 
