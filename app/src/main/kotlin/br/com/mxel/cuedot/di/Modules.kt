@@ -1,5 +1,6 @@
 package br.com.mxel.cuedot.di
 
+import android.content.Context
 import br.com.mxel.cuedot.BuildConfig
 import br.com.mxel.cuedot.data.orderby.OrderedByRepository
 import br.com.mxel.cuedot.data.orderby.remote.IOrderedByClient
@@ -18,6 +19,7 @@ import org.koin.android.viewmodel.experimental.builder.viewModel
 import org.koin.dsl.module.module
 import org.koin.experimental.builder.factory
 import org.koin.experimental.builder.singleBy
+import java.io.File
 
 const val IS_DEBUG = "isDebug"
 const val API_KEY = "apiKey"
@@ -35,7 +37,7 @@ val networkModule = module {
 
     single {
         RemoteClientFactory(
-                androidContext().cacheDir,
+                getCacheDir(androidContext()),
                 MovieInterceptor(get(API_KEY)),
                 get(IS_DEBUG)
         )
@@ -54,3 +56,5 @@ val orderByModule = module {
 
     viewModel<OrderedByViewModel>()
 }
+
+private fun getCacheDir(context: Context?): File? = context?.cacheDir

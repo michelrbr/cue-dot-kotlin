@@ -18,7 +18,7 @@ android {
         targetSdkVersion androidSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "API_KEY", props['apiKey']
     }
@@ -65,7 +65,6 @@ dependencies {
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-android-viewmodel:$koinVersion"
     implementation "org.koin:koin-android-scope:$koinVersion"
-    implementation "org.koin:koin-test:$koinVersion"
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
@@ -74,6 +73,10 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "org.koin:koin-test:$koinVersion"
+    androidTestImplementation "androidx.test.ext:junit:$junitXVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$testArchVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

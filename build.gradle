@@ -27,8 +27,10 @@ buildscript {
 
     // Test
     ext.junitVersion = '4.12'
-    ext.testRunnerVersion = '1.0.2'
-    ext.espressoVersion = '3.0.2'
+    ext.junitXVersion = '1.1.0'
+    ext.testRunnerVersion = '1.1.1'
+    ext.testArchVersion = '2.0.0'
+    ext.espressoVersion = '3.1.1'
     ext.mockkVersion = "1.9.kotlin12"
 
     // HTTP Networking
