@@ -17,14 +17,11 @@ class GetMoviesOrderedBy(
     private fun getMoviesOrderedBy(orderBy: Order, page: Int): Observable<Event<MovieList>> {
 
         return if (page < 1) {
-             Single.just(
-                     Event.error<MovieList>(IllegalArgumentException("Page must be higher than 0"))
-             ).toObservable()
+            Single.just(
+                    Event.error<MovieList>(OrderByError.INVALID_PAGE)
+            ).toObservable()
         } else {
-            repository.getMoviesOrderedBy(orderBy, page)
-                    .map { Event.data(it) }
-                    .onErrorReturn { Event.error(it) }
-                    .toObservable()
+            repository.getMoviesOrderedBy(orderBy, page).toObservable()
         }
     }
 }

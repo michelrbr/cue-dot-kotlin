@@ -23,7 +23,7 @@ class OrderByTest : BaseTest() {
         val expectedMovieList = MovieList(1, 3, 1, null)
 
         every { repository.getMoviesOrderedBy(any(), any()) } returns
-                Single.just(expectedMovieList)
+                Single.just(Event.data(expectedMovieList))
 
         getMoviesOrderedBy.execute(Order.POPULAR, 1)
                 .test()
@@ -35,7 +35,7 @@ class OrderByTest : BaseTest() {
     fun shouldGetError() {
 
         every { repository.getMoviesOrderedBy(any(), any()) } returns
-                Single.error(Throwable("Testing"))
+                Single.just(Event.error())
 
         getMoviesOrderedBy.execute(Order.NOW_PLAYING, 1)
                 .test()
@@ -49,6 +49,6 @@ class OrderByTest : BaseTest() {
         getMoviesOrderedBy.execute(Order.NOW_PLAYING, 0)
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Error).error is IllegalArgumentException }
+                .assertValueAt(1) { (it as Event.Error).error == OrderByError.INVALID_PAGE }
     }
 }

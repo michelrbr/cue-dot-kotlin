@@ -23,7 +23,7 @@ class DetailTest : BaseTest() {
         val expectedMovie = Movie(id = 1, title = "Test movie")
 
         every { repository.getMovie(any()) } returns
-                Single.just(expectedMovie)
+                Single.just(Event.data(expectedMovie))
 
         getMovieDetail.execute(1)
                 .test()
@@ -37,6 +37,6 @@ class DetailTest : BaseTest() {
         getMovieDetail.execute(0)
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Error).error is IllegalArgumentException }
+                .assertValueAt(1) { (it as Event.Error).error == DetailError.INVALID_ID }
     }
 }

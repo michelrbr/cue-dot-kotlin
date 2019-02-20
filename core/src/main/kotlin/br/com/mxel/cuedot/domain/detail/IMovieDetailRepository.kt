@@ -1,9 +1,10 @@
 package br.com.mxel.cuedot.domain.detail
 
+import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.Movie
 import io.reactivex.Single
 
 interface IMovieDetailRepository {
 
-    fun getMovie(movieId: Int): Single<Movie>
+    fun getMovie(movieId: Int): Single<Event<Movie>>
 }

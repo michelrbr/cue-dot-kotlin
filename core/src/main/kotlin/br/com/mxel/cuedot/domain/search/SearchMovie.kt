@@ -18,13 +18,10 @@ class SearchMovie(
 
         return if (query.isEmpty()) {
             Single.just(
-                    Event.error<MovieList>(IllegalArgumentException("Query shouldn't be empty"))
+                    Event.error<MovieList>(SearchError.EMPTY_QUERY)
             ).toObservable()
         } else {
-            repository.searchMovie(query)
-                    .map { Event.data(it) }
-                    .onErrorReturn { Event.error(it) }
-                    .toObservable()
+            repository.searchMovie(query).toObservable()
         }
     }
 }

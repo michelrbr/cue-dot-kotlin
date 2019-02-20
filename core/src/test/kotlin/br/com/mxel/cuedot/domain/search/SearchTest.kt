@@ -23,7 +23,7 @@ class SearchTest: BaseTest() {
         val expectedMovieList = MovieList(1, 3, 1, null)
 
         every { repository.searchMovie(any()) } returns
-                Single.just(expectedMovieList)
+                Single.just(Event.data(expectedMovieList))
 
         searchMovie.execute("test")
                 .test()
@@ -37,6 +37,6 @@ class SearchTest: BaseTest() {
         searchMovie.execute("")
                 .test()
                 .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Error).error is IllegalArgumentException }
+                .assertValueAt(1) { (it as Event.Error).error == SearchError.EMPTY_QUERY }
     }
 }

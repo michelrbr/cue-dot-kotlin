@@ -18,13 +18,10 @@ class GetMovieDetail(
 
         return if (movieId < 1) {
             Single.just(
-                    Event.error<Movie>(IllegalArgumentException("Movie id must be higher than 0"))
+                    Event.error<Movie>(DetailError.INVALID_ID)
             ).toObservable()
         } else {
-            repository.getMovie(movieId)
-                    .map { Event.data(it) }
-                    .onErrorReturn { Event.error(it) }
-                    .toObservable()
+            repository.getMovie(movieId).toObservable()
         }
     }
 }
