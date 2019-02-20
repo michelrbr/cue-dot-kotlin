@@ -13,6 +13,7 @@ import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.orderby.Order
+import br.com.mxel.cuedot.extension.message
 import br.com.mxel.cuedot.presentation.base.BaseActivity
 import br.com.mxel.cuedot.presentation.orderby.ui.MoviesAdapter
 import butterknife.BindArray
@@ -72,18 +73,18 @@ class OrderedByActivity : BaseActivity() {
         showLoadingStatus(event?.isLoading() == true)
 
         when (event) {
-            is Event.Idle -> viewModel.getMovies(currentOrder, 1)
+            is Event.Idle -> viewModel.getMovies(currentOrder, 0)
             is Event.Data -> showMovies(event.data)
-            is Event.Error -> showError(event.error)
+            is Event.Error -> showError(event)
         }
     }
 
-    private fun showError(error: Throwable) {
+    private fun showError(error: Event.Error) {
 
         errorTextView.visibility = View.VISIBLE
         loadingProgress.visibility = View.GONE
         moviesRecyclerView.visibility = View.GONE
-        errorTextView.text = error.message
+        errorTextView.text = getString(error.message(error.error))
     }
 
     private fun showMovies(movies: List<Movie>) {

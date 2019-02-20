@@ -16,4 +16,8 @@
         <item>@string/now_playing</item>
         <item>@string/upcoming</item>
     </array>
+
+    <string name="connection_lost">There\'s no internet connection</string>
+    <string name="invalid_page">Page not found</string>
+    <string name="generic_error">Sorry, an error has occurred</string>
 </resources>
