@@ -1,10 +1,10 @@
 package br.com.mxel.cuedot.presentation.orderby
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.SchedulerProvider
 import br.com.mxel.cuedot.domain.entity.Movie
+import br.com.mxel.cuedot.domain.entity.MovieList
 import br.com.mxel.cuedot.domain.orderby.GetMoviesOrderedBy
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.presentation.base.BaseViewModel
@@ -17,32 +17,65 @@ class OrderedByViewModel(
 
     private var currentOrder: Order = Order.POPULAR
     private var currentPage: Int = 1
-    private var totalPages: Int = 0
-    private var totalResults: Int = 0
+    private var totalPages: Int = 1
 
-    private val _movies = MutableLiveData<Event<List<Movie>>>()
-            .apply { value = Event.idle() }
-    val movies: LiveData<Event<List<Movie>>>
-        get() = _movies
+    val refreshLoading = MutableLiveData<Boolean>().apply { value = false }
 
-    fun getMovies(order: Order, page: Int) {
+    val hasNextPage = MutableLiveData<Boolean>().apply { value = true }
+
+    val movies = MutableLiveData<ArrayList<Movie>>().apply { value = ArrayList() }
+
+    val error = MutableLiveData<Event.Error?>().apply { value = null }
+
+    fun getMovies(order: Order) {
 
         currentOrder = order
-        currentPage = page
-        getMoviesOrderedBy.execute(order, page)
+        currentPage = 1
+        getMoviesOrderedBy.execute(currentOrder, currentPage)
                 .subscribeOn(scheduler.backgroundThread)
-                .map {
-                    when (it) {
-                        is Event.Data -> Event.data(it.data.movies ?: emptyList())
-                        is Event.Idle -> Event.idle()
-                        is Event.Loading -> Event.loading()
-                        is Event.Error -> Event.error(it.error)
-                    }
-                }
                 .observeOn(scheduler.mainThread)
                 .subscribe {
-                    _movies.value = it
+                    when (it) {
+                        is Event.Data -> {
+                            totalPages = it.data.totalPages
+                            hasNextPage.value = (currentPage < totalPages)
+                            movies.value = ArrayList(it.data.movies ?: emptyList())
+                            refreshLoading.value = false
+                        }
+                        is Event.Loading -> refreshLoading.value = true
+                        is Event.Error -> error.value = it
+                    }
                 }
                 .addTo(disposable)
+    }
+
+    fun loadMore() {
+        if (currentPage < totalPages) {
+
+            currentPage++
+            getMoviesOrderedBy.execute(currentOrder, currentPage)
+                    .subscribeOn(scheduler.backgroundThread)
+                    .map {
+                        if (it is Event.Data) {
+                            val list = movies.value.apply { this?.addAll(it.data.movies ?: emptyList()) }
+                            return@map Event.data(MovieList(it.data.page, it.data.totalResults, it.data.totalPages, list))
+                            //it.data.movies = movies.value.apply { this.addAll(it.data.movies) }
+                        }
+                        it
+                    }
+                    .observeOn(scheduler.mainThread)
+                    .subscribe {
+                        when (it) {
+                            is Event.Data -> {
+                                hasNextPage.value = (currentPage < totalPages)
+                                movies.value = ArrayList(it.data.movies ?: emptyList())
+                            }
+                            is Event.Error -> error.value = it
+                        }
+                    }
+                    .addTo(disposable)
+        } else {
+            hasNextPage.value = false
+        }
     }
 }

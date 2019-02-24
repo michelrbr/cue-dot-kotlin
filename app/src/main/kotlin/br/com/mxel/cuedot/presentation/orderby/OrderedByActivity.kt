@@ -34,6 +34,7 @@ class OrderedByActivity : BaseActivity() {
             Order.UPCOMING -> orderArray[3]
         }
 
+    private var isLoading = false
 
     @BindArray(R.array.order_by_list)
     lateinit var orderArray: Array<String>
@@ -54,7 +55,10 @@ class OrderedByActivity : BaseActivity() {
 
         setupView()
 
-        viewModel.movies.observe(this, Observer { onMoviesListEvent(it) })
+        viewModel.movies.observe(this, Observer { showMovies(it) })
+        viewModel.refreshLoading.observe(this, Observer { showLoadingStatus(it) })
+        viewModel.error.observe(this, Observer { showError(it) })
+        viewModel.hasNextPage.observe(this, Observer { moviesAdapter.canLoadMore = it })
     }
 
     private fun setupView() {
@@ -65,31 +69,47 @@ class OrderedByActivity : BaseActivity() {
             it.layoutManager = LinearLayoutManager(this)
             it.setHasFixedSize(true)
             it.adapter = moviesAdapter
+            it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    if (
+                            !isLoading
+                            && (viewModel.hasNextPage.value == true)
+                            && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                    ) {
+                        isLoading = true
+                        viewModel.loadMore()
+                    }
+                }
+            })
         }
     }
 
-    private fun onMoviesListEvent(event: Event<List<Movie>>?) {
+    private fun showError(error: Event.Error?) {
 
-        showLoadingStatus(event?.isLoading() == true)
-
-        when (event) {
-            is Event.Idle -> viewModel.getMovies(currentOrder, 0)
-            is Event.Data -> showMovies(event.data)
-            is Event.Error -> showError(event)
+        if (error != null) {
+            errorTextView.visibility = View.VISIBLE
+            loadingProgress.visibility = View.GONE
+            moviesRecyclerView.visibility = View.GONE
+            errorTextView.text = getString(error.message(error.error))
         }
-    }
-
-    private fun showError(error: Event.Error) {
-
-        errorTextView.visibility = View.VISIBLE
-        loadingProgress.visibility = View.GONE
-        moviesRecyclerView.visibility = View.GONE
-        errorTextView.text = getString(error.message(error.error))
     }
 
     private fun showMovies(movies: List<Movie>) {
 
-        moviesAdapter.setData(movies)
+        if (movies.isEmpty()) {
+            viewModel.getMovies(currentOrder)
+        } else {
+            isLoading = false
+            moviesAdapter.setData(movies)
+        }
     }
 
     private fun showLoadingStatus(loading: Boolean) {
