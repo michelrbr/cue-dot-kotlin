@@ -3,10 +3,13 @@ package br.com.mxel.cuedot.orderby
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import br.com.mxel.cuedot.domain.entity.Movie
+import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.presentation.orderby.OrderedByViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.unmockkAll
+import junit.framework.Assert.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -34,7 +37,7 @@ class OrderByViewModelTest: KoinComponent {
     @Test
     fun testOrderByUseCaseInjection() {
 
-        val viewModel:OrderedByViewModel = getViewModel(lifecycleOwner)
+        val viewModel:OrderedByViewModel? = getViewModel(lifecycleOwner)
 
         checkNotNull(viewModel)
     }
