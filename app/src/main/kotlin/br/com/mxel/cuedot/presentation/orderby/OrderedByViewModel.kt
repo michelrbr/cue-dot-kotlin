@@ -11,9 +11,9 @@ import br.com.mxel.cuedot.presentation.base.BaseViewModel
 import io.reactivex.rxkotlin.addTo
 
 class OrderedByViewModel(
-    schedulerProvider: SchedulerProvider,
-    private val getMoviesOrderedBy: GetMoviesOrderedBy
-): BaseViewModel(schedulerProvider) {
+        schedulerProvider: SchedulerProvider,
+        private val getMoviesOrderedBy: GetMoviesOrderedBy
+) : BaseViewModel(schedulerProvider) {
 
     private var currentOrder: Order = Order.POPULAR
     private var currentPage: Int = 1
@@ -45,6 +45,7 @@ class OrderedByViewModel(
                         is Event.Loading -> refreshLoading.value = true
                         is Event.Error -> error.value = it
                     }
+                    checkIfCanDispose(it)
                 }
                 .addTo(disposable)
     }
@@ -57,7 +58,9 @@ class OrderedByViewModel(
                     .subscribeOn(scheduler.backgroundThread)
                     .map {
                         if (it is Event.Data) {
-                            val list = movies.value.apply { this?.addAll(it.data.movies ?: emptyList()) }
+                            val list = movies.value.apply {
+                                this?.addAll(it.data.movies ?: emptyList())
+                            }
                             return@map Event.data(MovieList(it.data.page, it.data.totalResults, it.data.totalPages, list))
                             //it.data.movies = movies.value.apply { this.addAll(it.data.movies) }
                         }
@@ -72,6 +75,7 @@ class OrderedByViewModel(
                             }
                             is Event.Error -> error.value = it
                         }
+                        checkIfCanDispose(it)
                     }
                     .addTo(disposable)
         } else {
