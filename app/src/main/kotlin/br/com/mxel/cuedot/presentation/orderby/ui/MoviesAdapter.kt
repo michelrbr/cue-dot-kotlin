@@ -18,9 +18,10 @@ class MoviesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         if (viewType == MOVIE_VIEW) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_view_holder, parent, false)
 
             val holder = MovieViewHolder(view)
+            
             /*holder.itemView.setOnClickListener { v ->
 
                 val movie = holder.getMovie()
@@ -31,7 +32,7 @@ class MoviesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             return holder
         } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_loading, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.loading_view_holder, parent, false)
             return LoadingViewHolder(view)
         }
     }
