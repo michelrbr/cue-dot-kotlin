@@ -1,5 +1,6 @@
 package br.com.mxel.cuedot.presentation.orderby
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.SchedulerProvider
@@ -15,9 +16,12 @@ class OrderedByViewModel(
         private val getMoviesOrderedBy: GetMoviesOrderedBy
 ) : BaseViewModel(schedulerProvider) {
 
-    private var currentOrder: Order = Order.POPULAR
     private var currentPage: Int = 1
     private var totalPages: Int = 1
+
+    private val _currentOrder = MutableLiveData<Order>()
+    val currentOrder: LiveData<Order>
+        get() = _currentOrder
 
     val refreshLoading = MutableLiveData<Boolean>().apply { value = false }
 
@@ -29,9 +33,9 @@ class OrderedByViewModel(
 
     fun getMovies(order: Order) {
 
-        currentOrder = order
+        _currentOrder.value = order
         currentPage = 1
-        getMoviesOrderedBy.execute(currentOrder, currentPage)
+        getMoviesOrderedBy.execute(order, currentPage)
                 .subscribeOn(scheduler.backgroundThread)
                 .observeOn(scheduler.mainThread)
                 .subscribe {
@@ -54,7 +58,7 @@ class OrderedByViewModel(
         if (currentPage < totalPages) {
 
             currentPage++
-            getMoviesOrderedBy.execute(currentOrder, currentPage)
+            getMoviesOrderedBy.execute(_currentOrder.value!!, currentPage)
                     .subscribeOn(scheduler.backgroundThread)
                     .map {
                         if (it is Event.Data) {

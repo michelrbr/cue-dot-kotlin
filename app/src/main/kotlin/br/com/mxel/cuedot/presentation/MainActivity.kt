@@ -12,6 +12,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        OrderedByActivity.launch(this, Order.TOP_RATED)
+        OrderedByActivity.launch(this, Order.POPULAR)
     }
 }

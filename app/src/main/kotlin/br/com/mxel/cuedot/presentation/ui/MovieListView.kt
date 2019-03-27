@@ -28,7 +28,12 @@ class MovieListView : FrameLayout, LifecycleObserver {
     private var unbinder: Unbinder? = null
     private var isLoading = false
     private val moviesAdapter = MoviesAdapter()
+
     var loadMoreListener: ILoadMoreListener? = null
+
+    var refreshListener: SwipeRefreshLayout.OnRefreshListener? = null
+        set(value) = refreshView.setOnRefreshListener(value)
+
     var hasNextPage: Boolean
         get() = moviesAdapter.canLoadMore
         set(value) {
@@ -75,6 +80,7 @@ class MovieListView : FrameLayout, LifecycleObserver {
     fun showMovies(movies: List<Movie>) {
 
         isLoading = false
+        refreshView.isRefreshing = false
         moviesAdapter.setData(movies)
     }
 
@@ -121,7 +127,7 @@ class MovieListView : FrameLayout, LifecycleObserver {
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun shutdown(){
+    fun shutdown() {
         unbinder?.unbind()
     }
 

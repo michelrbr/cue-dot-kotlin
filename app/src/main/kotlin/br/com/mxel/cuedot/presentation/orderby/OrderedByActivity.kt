@@ -3,7 +3,11 @@ package br.com.mxel.cuedot.presentation.orderby
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.presentation.base.BaseActivity
@@ -16,21 +20,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class OrderedByActivity : BaseActivity() {
 
     private val viewModel: OrderedByViewModel by viewModel()
-    private var currentOrder: Order? = null
-        get() {
-            if (field == null) {
-                field = intent.getSerializableExtra(ORDER) as Order
-            }
-            return field
-        }
-    private val currentTitle: String
-        get() = when (currentOrder) {
-            Order.POPULAR -> orderArray[0]
-            Order.TOP_RATED -> orderArray[1]
-            Order.NOW_PLAYING -> orderArray[2]
-            Order.UPCOMING -> orderArray[3]
-            else -> ""
-        }
 
     @BindArray(R.array.order_by_list)
     lateinit var orderArray: Array<String>
@@ -45,7 +34,7 @@ class OrderedByActivity : BaseActivity() {
 
         unbinder = ButterKnife.bind(this)
 
-        setupView()
+        moviesListView.registerLifeCycleOwner(this)
 
         moviesListView.loadMoreListener = object : MovieListView.ILoadMoreListener {
             override fun onLoadMore() {
@@ -53,20 +42,61 @@ class OrderedByActivity : BaseActivity() {
             }
         }
 
+        moviesListView.refreshListener = SwipeRefreshLayout.OnRefreshListener {
+            viewModel.getMovies(viewModel.currentOrder.value!!)
+        }
+
+        viewModel.currentOrder.observe(this, Observer { setupView(it) })
         viewModel.movies.observe(this, Observer { moviesListView.showMovies(it) })
         viewModel.refreshLoading.observe(this, Observer { moviesListView.showLoadingStatus(it) })
         viewModel.error.observe(this, Observer { moviesListView.showError(it) })
         viewModel.hasNextPage.observe(this, Observer { moviesListView.hasNextPage = it })
 
         if (viewModel.movies.value?.isEmpty() == true) {
-            viewModel.getMovies(currentOrder!!)
+
+            val currentOrder: Order = if (savedInstanceState?.containsKey(ORDER) == true) {
+                savedInstanceState[ORDER] as Order
+            } else {
+                intent.getSerializableExtra(ORDER) as Order
+            }
+
+            viewModel.getMovies(currentOrder)
         }
     }
 
-    private fun setupView() {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.order_by_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
-        title = currentTitle
-        moviesListView.registerLifeCycleOwner(this)
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putSerializable(ORDER, viewModel.currentOrder.value)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        if (item?.itemId == R.id.action_order_by) {
+            AlertDialog.Builder(this).apply {
+                setItems(orderArray) { dialogInterface, position ->
+
+                    viewModel.getMovies(Order.values()[position])
+                    dialogInterface.dismiss()
+                }
+            }.show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupView(order: Order?) {
+
+        title = when (order) {
+            Order.POPULAR -> orderArray[0]
+            Order.TOP_RATED -> orderArray[1]
+            Order.NOW_PLAYING -> orderArray[2]
+            Order.UPCOMING -> orderArray[3]
+            else -> ""
+        }
     }
 
     companion object {
