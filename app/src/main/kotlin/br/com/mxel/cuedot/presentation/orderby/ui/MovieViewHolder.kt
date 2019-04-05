@@ -4,18 +4,14 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.recyclerview.widget.RecyclerView
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.entity.Movie
+import br.com.mxel.cuedot.presentation.base.BaseListViewHolder
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
 
-class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    private var _currentMovie: Movie? = null
-    val currentMovie: Movie?
-        get() = _currentMovie
+class MovieViewHolder(view: View) : BaseListViewHolder<Movie>(view) {
 
     // UI
     @BindView(R.id.movie_title)
@@ -31,14 +27,14 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         ButterKnife.bind(this, view)
     }
 
-    fun setMovie(movie: Movie) {
+    override fun bindItem(item: Movie) {
 
-        _currentMovie = movie
-        title.text = movie.title
-        date.text = movie.releaseDate
-        ratingBar.rating = movie.voteAverage!! / 2
+        currentItem = item
+        title.text = currentItem?.title
+        date.text = currentItem?.releaseDate
+        ratingBar.rating = currentItem?.voteAverage!! / 2
         Picasso.get()
-                .load(movie.posterPath)
+                .load(currentItem?.posterPath)
                 .into(movieCover)
     }
 }

@@ -41,7 +41,7 @@ class MoviesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         if (holder is MovieViewHolder) {
             val movie = data!![position]
-            holder.setMovie(movie)
+            holder.bindItem(movie)
         }
     }
 
