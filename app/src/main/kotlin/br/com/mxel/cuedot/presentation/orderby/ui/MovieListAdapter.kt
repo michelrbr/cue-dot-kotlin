@@ -12,35 +12,24 @@ class MovieListAdapter : BaseListAdapter<Movie>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseListViewHolder<Movie> {
 
-        return if (viewType == ITEM_VIEW) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_view_holder, parent, false)
-            MovieViewHolder(view)
-        } else {
-            buildLoadingView(parent)
-        }
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_view_holder, parent, false)
+        return MovieViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: BaseListViewHolder<Movie>, position: Int) {
 
-        if (!holder.loadingMode) {
-
-            if (itemCount > 0) {
-                holder.bindItem(getItem(position))
-            }
-        }
+        holder.bindItem(getItem(position))
     }
 
     private companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
 
             override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return false
-                //return oldItem == newItem
+                return oldItem == newItem
             }
 
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return false
-                //return oldItem.id == newItem.id
+                return oldItem.id == newItem.id
             }
         }
     }

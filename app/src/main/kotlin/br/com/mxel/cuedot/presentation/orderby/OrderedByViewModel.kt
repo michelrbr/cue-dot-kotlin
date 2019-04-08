@@ -66,7 +66,6 @@ class OrderedByViewModel(
                                 this?.addAll(it.data.movies ?: emptyList())
                             }
                             return@map Event.data(MovieList(it.data.page, it.data.totalResults, it.data.totalPages, list))
-                            //it.data.movies = movies.value.apply { this.addAll(it.data.movies) }
                         }
                         it
                     }

@@ -63,8 +63,8 @@ class MovieListView : FrameLayout, LifecycleObserver {
     }
 
     fun reset() {
-        moviesRecyclerView.scrollTo(0,0)
         hasNextPage = true
+        moviesAdapter.submitList(null)
     }
 
     fun registerLifeCycleOwner(owner: LifecycleOwner) {
@@ -109,6 +109,7 @@ class MovieListView : FrameLayout, LifecycleObserver {
 
         moviesRecyclerView.also {
             it.layoutManager = LinearLayoutManager(context)
+            it.itemAnimator = null
             it.setHasFixedSize(true)
             it.adapter = moviesAdapter
         }
