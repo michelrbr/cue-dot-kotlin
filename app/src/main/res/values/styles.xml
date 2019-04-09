@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CueDotTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
@@ -9,5 +9,9 @@
         <item name="android:textColor">@color/primaryTextColor</item>
     </style>
 
-    <style name="AppDialog" parent="Base.Theme.AppCompat.Dialog.Alert" />
+    <style name="CueDotTheme.Launch">
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+
+    <style name="CueDotTheme.Dialog" parent="Base.Theme.AppCompat.Dialog.Alert" />
 </resources>
