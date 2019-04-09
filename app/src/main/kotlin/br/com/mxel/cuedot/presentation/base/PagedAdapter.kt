@@ -1,13 +1,10 @@
 package br.com.mxel.cuedot.presentation.base
 
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 
-abstract class BaseListAdapter<T>(
-        diffCallback: DiffUtil.ItemCallback<T>
-) : ListAdapter<T, BaseListViewHolder<T>>(diffCallback) {
+abstract class PagedAdapter<T, VH: BaseListViewHolder<T>> : RecyclerView.Adapter<VH> {
+
+    private var helper: AsyncListDiffer<T>
 
     protected var loading: Boolean = false
 
@@ -37,6 +34,15 @@ abstract class BaseListAdapter<T>(
                 }
             }
 
+    constructor( diffCallback: DiffUtil.ItemCallback<T> ) {
+        helper = AsyncListDiffer(AdapterListUpdateCallback(this),
+                AsyncDifferConfig.Builder(diffCallback).build())
+    }
+
+    constructor( config: AsyncDifferConfig<T>) {
+        helper = AsyncListDiffer(AdapterListUpdateCallback(this), config)
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerView.addOnScrollListener(scrollListener)
@@ -48,23 +54,26 @@ abstract class BaseListAdapter<T>(
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
-    override fun submitList(list: List<T>?) {
+    fun submitList(list: List<T>?) {
 
-        if (list == null) {
-            super.submitList(null)
-            return
-        }
-
-        if (list.isNotEmpty()) {
-            loading = false
-            if (loadEnable) {
-                super.submitList(ArrayList(list).apply { add(null) })
-            } else {
-                super.submitList(list)
-            }
+        if (list.isNullOrEmpty()) {
+            helper.submitList(list)
         } else {
-            super.submitList(list)
+            loading = false
+            if (loadEnable && list.last() != null) {
+                helper.submitList(ArrayList(list).apply { add(null) })
+            } else {
+                helper.submitList(list)
+            }
         }
+    }
+
+    protected fun getItem(position: Int): T {
+        return helper.currentList[position]
+    }
+
+    override fun getItemCount(): Int {
+        return helper.currentList.size
     }
 
     interface ILoadMoreListener {

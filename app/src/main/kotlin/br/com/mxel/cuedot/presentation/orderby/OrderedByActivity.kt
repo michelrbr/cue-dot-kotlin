@@ -11,7 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.presentation.base.BaseActivity
-import br.com.mxel.cuedot.presentation.base.BaseListAdapter
+import br.com.mxel.cuedot.presentation.base.PagedAdapter
 import br.com.mxel.cuedot.presentation.ui.MovieListView
 import butterknife.BindArray
 import butterknife.BindView
@@ -37,7 +37,7 @@ class OrderedByActivity : BaseActivity() {
 
         moviesListView.registerLifeCycleOwner(this)
 
-        moviesListView.setLoadMoreListener( object : BaseListAdapter.ILoadMoreListener {
+        moviesListView.setLoadMoreListener( object : PagedAdapter.ILoadMoreListener {
             override fun onLoadMore() {
                 viewModel.loadMore()
             }

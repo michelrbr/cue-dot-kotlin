@@ -18,7 +18,7 @@ import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.extension.message
-import br.com.mxel.cuedot.presentation.base.BaseListAdapter
+import br.com.mxel.cuedot.presentation.base.PagedAdapter
 import br.com.mxel.cuedot.presentation.orderby.ui.MovieListAdapter
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -101,7 +101,7 @@ class MovieListView : FrameLayout, LifecycleObserver {
         }
     }
 
-    fun setLoadMoreListener(listener: BaseListAdapter.ILoadMoreListener) {
+    fun setLoadMoreListener(listener: PagedAdapter.ILoadMoreListener) {
         moviesAdapter.loadMoreListener = listener
     }
 

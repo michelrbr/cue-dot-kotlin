@@ -32,18 +32,29 @@ class MovieViewHolder(view: View) : BaseListViewHolder<Movie>(view) {
 
     override fun bindItem(item: Movie?) {
 
-        if (item != null) {
+        currentItem = item
 
-            loading.hide()
-            currentItem = item
+        if (currentItem != null) {
+
             title.text = currentItem?.title
             date.text = currentItem?.releaseDate
             ratingBar.rating = currentItem?.voteAverage!! / 2
             Picasso.get()
                     .load(currentItem?.posterPath)
                     .into(movieCover)
+
+            loading.visibility = View.GONE
+            title.visibility = View.VISIBLE
+            date.visibility = View.VISIBLE
+            ratingBar.visibility = View.VISIBLE
+            movieCover.visibility = View.VISIBLE
         } else {
-            loading.show()
+            loading.visibility = View.VISIBLE
+            title.visibility = View.GONE
+            date.visibility = View.GONE
+            ratingBar.visibility = View.GONE
+            movieCover.visibility = View.GONE
+
         }
     }
 }

@@ -5,18 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.entity.Movie
-import br.com.mxel.cuedot.presentation.base.BaseListAdapter
-import br.com.mxel.cuedot.presentation.base.BaseListViewHolder
+import br.com.mxel.cuedot.presentation.base.PagedAdapter
 
-class MovieListAdapter : BaseListAdapter<Movie>(DIFF_CALLBACK) {
+class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseListViewHolder<Movie> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_view_holder, parent, false)
         return MovieViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BaseListViewHolder<Movie>, position: Int) {
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
 
         holder.bindItem(getItem(position))
     }
