@@ -10,7 +10,7 @@ buildscript {
     ext.rxKotlinVersion = "2.2.0"
 
     // Android
-    ext.gradlePluginVersion = '3.3.1'
+    ext.gradlePluginVersion = '3.3.2'
     ext.androidSdkVersion = 28
     ext.androidMinSdkVersion = 21
     ext.appcompatVersion = '1.0.2'

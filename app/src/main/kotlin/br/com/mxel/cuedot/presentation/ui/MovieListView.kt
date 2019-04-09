@@ -18,7 +18,8 @@ import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.extension.message
-import br.com.mxel.cuedot.presentation.orderby.ui.MoviesAdapter
+import br.com.mxel.cuedot.presentation.base.PagedAdapter
+import br.com.mxel.cuedot.presentation.orderby.ui.MovieListAdapter
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
@@ -27,17 +28,15 @@ class MovieListView : FrameLayout, LifecycleObserver {
 
     private var unbinder: Unbinder? = null
     private var isLoading = false
-    private val moviesAdapter = MoviesAdapter()
-
-    var loadMoreListener: ILoadMoreListener? = null
+    private val moviesAdapter = MovieListAdapter()
 
     var refreshListener: SwipeRefreshLayout.OnRefreshListener? = null
         set(value) = refreshView.setOnRefreshListener(value)
 
     var hasNextPage: Boolean
-        get() = moviesAdapter.canLoadMore
+        get() = moviesAdapter.loadEnable
         set(value) {
-            moviesAdapter.canLoadMore = value
+            moviesAdapter.loadEnable = value
         }
 
     // UI
@@ -63,6 +62,11 @@ class MovieListView : FrameLayout, LifecycleObserver {
         setupView()
     }
 
+    fun reset() {
+        hasNextPage = true
+        moviesAdapter.submitList(null)
+    }
+
     fun registerLifeCycleOwner(owner: LifecycleOwner) {
         owner.lifecycle.addObserver(this)
     }
@@ -81,7 +85,7 @@ class MovieListView : FrameLayout, LifecycleObserver {
 
         isLoading = false
         refreshView.isRefreshing = false
-        moviesAdapter.setData(movies)
+        moviesAdapter.submitList(movies)
     }
 
     fun showLoadingStatus(loading: Boolean) {
@@ -97,42 +101,24 @@ class MovieListView : FrameLayout, LifecycleObserver {
         }
     }
 
+    fun setLoadMoreListener(listener: PagedAdapter.ILoadMoreListener) {
+        moviesAdapter.loadMoreListener = listener
+    }
+
     private fun setupView() {
 
         moviesRecyclerView.also {
             it.layoutManager = LinearLayoutManager(context)
+            it.itemAnimator = null
             it.setHasFixedSize(true)
             it.adapter = moviesAdapter
-            it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-
-                    if (
-                            !isLoading &&
-                            hasNextPage &&
-                            (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                    ) {
-                        isLoading = true
-                        loadMoreListener?.onLoadMore()
-                    }
-                }
-            })
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun shutdown() {
         unbinder?.unbind()
-    }
-
-    interface ILoadMoreListener {
-        fun onLoadMore()
+        moviesAdapter.loadMoreListener = null
     }
 }
 
