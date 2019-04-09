@@ -57,8 +57,10 @@ class OrderedByActivity : BaseActivity() {
 
             val currentOrder: Order = if (savedInstanceState?.containsKey(ORDER) == true) {
                 savedInstanceState[ORDER] as Order
-            } else {
+            } else if (intent.hasExtra(ORDER)) {
                 intent.getSerializableExtra(ORDER) as Order
+            } else {
+                Order.POPULAR
             }
 
             viewModel.getMovies(currentOrder)
