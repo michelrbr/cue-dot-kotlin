@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.*
 
 abstract class PagedAdapter<T, VH: BaseListViewHolder<T>> : RecyclerView.Adapter<VH> {
 
-    private var helper: AsyncListDiffer<T>
+    private val helper: AsyncListDiffer<T>
 
     protected var loading: Boolean = false
 
