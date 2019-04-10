@@ -3,7 +3,6 @@ package br.com.mxel.cuedot.domain.detail
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.Movie
 import io.reactivex.Observable
-import io.reactivex.Single
 
 class GetMovieDetail(
         private val repository: IMovieDetailRepository
@@ -17,9 +16,7 @@ class GetMovieDetail(
     private fun getMovieDetail(movieId: Int): Observable<Event<Movie>> {
 
         return if (movieId < 1) {
-            Single.just(
-                    Event.error<Movie>(DetailError.INVALID_ID)
-            ).toObservable()
+            Observable.just(Event.error(DetailError.INVALID_ID))
         } else {
             repository.getMovie(movieId).toObservable()
         }

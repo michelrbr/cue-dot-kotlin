@@ -3,7 +3,6 @@ package br.com.mxel.cuedot.domain.search
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.entity.MovieList
 import io.reactivex.Observable
-import io.reactivex.Single
 
 class SearchMovie(
         private val repository: ISearchRepository
@@ -17,9 +16,7 @@ class SearchMovie(
     private fun search(query: String): Observable<Event<MovieList>> {
 
         return if (query.isEmpty()) {
-            Single.just(
-                    Event.error<MovieList>(SearchError.EMPTY_QUERY)
-            ).toObservable()
+            Observable.just(Event.error(SearchError.EMPTY_QUERY))
         } else {
             repository.searchMovie(query).toObservable()
         }
