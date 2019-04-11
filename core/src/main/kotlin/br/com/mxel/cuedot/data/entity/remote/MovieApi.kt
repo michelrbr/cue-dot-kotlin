@@ -13,7 +13,7 @@ data class MovieApi(
         val backdropPath: String? = null,
         val overview: String? = null,
         @Json(name = "vote_average")
-        val voteAverage: Float? = null,
+        val voteAverage: Float = 0.toFloat(),
         @Json(name = "release_date")
         val releaseDate: String? = null,
         val homepage: String? = null,
@@ -23,10 +23,10 @@ data class MovieApi(
     fun toMovie() = Movie(
             id,
             title,
-            String.format("%s/%s%s",ApiProvider.IMAGES_BASE_PATH, ApiProvider.POSTER_SIZE, posterPath),
-            String.format("%s/%s%s",ApiProvider.IMAGES_BASE_PATH, ApiProvider.BACKDROP_SIZE, backdropPath),
+            String.format("%s/%s%s", ApiProvider.IMAGES_BASE_PATH, ApiProvider.POSTER_SIZE, posterPath),
+            String.format("%s/%s%s", ApiProvider.IMAGES_BASE_PATH, ApiProvider.BACKDROP_SIZE, backdropPath),
             overview,
-            voteAverage,
+            voteAverage / 2,
             releaseDate,
             homepage,
             video
