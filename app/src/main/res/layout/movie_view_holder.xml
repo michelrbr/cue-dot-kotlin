@@ -51,14 +51,4 @@
         app:layout_constraintStart_toEndOf="@id/movie_cover"
         tools:text="@tools:sample/date/mmddyy" />
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyle"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,7 +37,7 @@ class OrderedByActivity : BaseActivity() {
 
         moviesListView.registerLifeCycleOwner(this)
 
-        moviesListView.setLoadMoreListener( object : PagedAdapter.ILoadMoreListener {
+        moviesListView.setLoadMoreListener(object : PagedAdapter.ILoadMoreListener {
             override fun onLoadMore() {
                 viewModel.loadMore()
             }

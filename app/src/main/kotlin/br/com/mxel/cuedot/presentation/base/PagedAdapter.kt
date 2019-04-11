@@ -2,7 +2,7 @@ package br.com.mxel.cuedot.presentation.base
 
 import androidx.recyclerview.widget.*
 
-abstract class PagedAdapter<T, VH: BaseListViewHolder<T>> : RecyclerView.Adapter<VH> {
+abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<VH> {
 
     private val helper: AsyncListDiffer<T>
 
@@ -26,7 +26,7 @@ abstract class PagedAdapter<T, VH: BaseListViewHolder<T>> : RecyclerView.Adapter
                     if (
                             !loading &&
                             loadEnable &&
-                            visibleItemCount + firstVisibleItemPosition >= totalItemCount
+                            (visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - 5)
                     ) {
                         loading = true
                         loadMoreListener?.onLoadMore()
@@ -34,12 +34,12 @@ abstract class PagedAdapter<T, VH: BaseListViewHolder<T>> : RecyclerView.Adapter
                 }
             }
 
-    constructor( diffCallback: DiffUtil.ItemCallback<T> ) {
+    constructor(diffCallback: DiffUtil.ItemCallback<T>) {
         helper = AsyncListDiffer(AdapterListUpdateCallback(this),
                 AsyncDifferConfig.Builder(diffCallback).build())
     }
 
-    constructor( config: AsyncDifferConfig<T>) {
+    constructor(config: AsyncDifferConfig<T>) {
         helper = AsyncListDiffer(AdapterListUpdateCallback(this), config)
     }
 
@@ -58,13 +58,14 @@ abstract class PagedAdapter<T, VH: BaseListViewHolder<T>> : RecyclerView.Adapter
 
         if (list.isNullOrEmpty()) {
             helper.submitList(list)
+            return
+        }
+
+        loading = false
+        if (loadEnable && list.last() != null) {
+            helper.submitList(ArrayList(list).apply { add(null) })
         } else {
-            loading = false
-            if (loadEnable && list.last() != null) {
-                helper.submitList(ArrayList(list).apply { add(null) })
-            } else {
-                helper.submitList(list)
-            }
+            helper.submitList(list)
         }
     }
 
