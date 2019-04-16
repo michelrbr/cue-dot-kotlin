@@ -1,4 +1,4 @@
-package br.com.mxel.cuedot.presentation.orderby.ui
+package br.com.mxel.cuedot.presentation.orderby.widget
 
 import android.view.View
 import android.widget.ImageView

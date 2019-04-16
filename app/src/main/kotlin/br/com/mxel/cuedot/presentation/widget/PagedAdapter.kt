@@ -1,6 +1,7 @@
-package br.com.mxel.cuedot.presentation.base
+package br.com.mxel.cuedot.presentation.widget
 
 import androidx.recyclerview.widget.*
+import br.com.mxel.cuedot.presentation.base.BaseViewHolder
 
 abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<VH> {
 

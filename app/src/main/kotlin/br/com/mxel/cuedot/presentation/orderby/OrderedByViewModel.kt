@@ -39,14 +39,15 @@ class OrderedByViewModel(
                 .subscribeOn(scheduler.backgroundThread)
                 .observeOn(scheduler.mainThread)
                 .subscribe {
+
+                    refreshLoading.value = it.isLoading()
+
                     when (it) {
                         is Event.Data -> {
                             totalPages = it.data.totalPages
                             hasNextPage.value = (currentPage < totalPages)
                             movies.value = ArrayList(it.data.movies ?: emptyList())
-                            refreshLoading.value = false
                         }
-                        is Event.Loading -> refreshLoading.value = true
                         is Event.Error -> error.value = it
                     }
                     checkIfCanDispose(it)

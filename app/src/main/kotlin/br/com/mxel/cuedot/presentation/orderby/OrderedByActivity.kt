@@ -7,12 +7,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mxel.cuedot.R
+import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.orderby.Order
+import br.com.mxel.cuedot.extension.message
 import br.com.mxel.cuedot.presentation.base.BaseActivity
-import br.com.mxel.cuedot.presentation.base.PagedAdapter
-import br.com.mxel.cuedot.presentation.ui.MovieListView
+import br.com.mxel.cuedot.presentation.orderby.widget.MovieListAdapter
+import br.com.mxel.cuedot.presentation.widget.PagedAdapter
+import br.com.mxel.cuedot.presentation.widget.PagedListLayout
 import butterknife.BindArray
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -22,12 +24,14 @@ class OrderedByActivity : BaseActivity() {
 
     private val viewModel: OrderedByViewModel by viewModel()
 
+    private val adapter = MovieListAdapter()
+
     @BindArray(R.array.order_by_list)
     lateinit var orderArray: Array<String>
 
     // UI
     @BindView(R.id.movie_list)
-    lateinit var moviesListView: MovieListView
+    lateinit var moviesListView: PagedListLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,35 +39,40 @@ class OrderedByActivity : BaseActivity() {
 
         unbinder = ButterKnife.bind(this)
 
-        moviesListView.registerLifeCycleOwner(this)
-
-        moviesListView.setLoadMoreListener(object : PagedAdapter.ILoadMoreListener {
+        adapter.loadMoreListener = object : PagedAdapter.ILoadMoreListener {
             override fun onLoadMore() {
                 viewModel.loadMore()
             }
-        })
+        }
 
-        moviesListView.refreshListener = SwipeRefreshLayout.OnRefreshListener {
+        moviesListView.adapter = adapter
+
+        moviesListView.setOnRefreshListener {
             viewModel.getMovies(viewModel.currentOrder.value!!)
         }
 
         viewModel.currentOrder.observe(this, Observer { setupView(it) })
-        viewModel.movies.observe(this, Observer { moviesListView.showMovies(it) })
-        viewModel.refreshLoading.observe(this, Observer { moviesListView.showLoadingStatus(it) })
-        viewModel.error.observe(this, Observer { moviesListView.showError(it) })
-        viewModel.hasNextPage.observe(this, Observer { moviesListView.hasNextPage = it })
+        viewModel.movies.observe(this, Observer { adapter.submitList(it) })
+        viewModel.refreshLoading.observe(this, Observer { moviesListView.isRefreshing = it })
+        viewModel.error.observe(this, Observer { showError(it) })
+        viewModel.hasNextPage.observe(this, Observer { adapter.loadEnable = it })
 
         if (viewModel.movies.value?.isEmpty() == true) {
 
-            val currentOrder: Order = if (savedInstanceState?.containsKey(ORDER) == true) {
-                savedInstanceState[ORDER] as Order
-            } else if (intent.hasExtra(ORDER)) {
-                intent.getSerializableExtra(ORDER) as Order
-            } else {
-                Order.POPULAR
+            val currentOrder: Order = when {
+                savedInstanceState?.containsKey(ORDER) == true -> savedInstanceState[ORDER] as Order
+                intent.hasExtra(ORDER) -> intent.getSerializableExtra(ORDER) as Order
+                else -> Order.POPULAR
             }
 
             viewModel.getMovies(currentOrder)
+        }
+    }
+
+    private fun showError(error: Event.Error?) {
+
+        if (error != null) {
+            moviesListView.showFeedbackStatus(getString(error.message(error.error)))
         }
     }
 
@@ -83,8 +92,8 @@ class OrderedByActivity : BaseActivity() {
             AlertDialog.Builder(this).apply {
                 setItems(orderArray) { dialogInterface, position ->
 
+                    adapter.submitList(null)
                     viewModel.getMovies(Order.values()[position])
-                    moviesListView.reset()
                     dialogInterface.dismiss()
                 }
             }.show()

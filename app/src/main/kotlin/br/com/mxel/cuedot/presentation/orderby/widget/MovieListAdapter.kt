@@ -1,11 +1,11 @@
-package br.com.mxel.cuedot.presentation.orderby.ui
+package br.com.mxel.cuedot.presentation.orderby.widget
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.entity.Movie
-import br.com.mxel.cuedot.presentation.base.PagedAdapter
+import br.com.mxel.cuedot.presentation.widget.PagedAdapter
 
 class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
 
