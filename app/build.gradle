@@ -77,8 +77,8 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"
     testImplementation "org.koin:koin-test:$koinVersion"
-    androidTestImplementation "androidx.test.ext:junit:$junitXVersion"
+    testImplementation "androidx.test.ext:junit:$junitXVersion"
+    testImplementation "androidx.arch.core:core-testing:$testArchVersion"
     androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
-    androidTestImplementation "androidx.arch.core:core-testing:$testArchVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }
