@@ -1,5 +1,18 @@
 apply plugin: 'kotlin'
 
+task jarTest(type: Jar) {
+    from sourceSets.test.output
+    classifier = 'test'
+}
+
+configurations {
+    testOutput
+}
+
+artifacts {
+    testOutput jarTest
+}
+
 dependencies {
 
     // kotlin
