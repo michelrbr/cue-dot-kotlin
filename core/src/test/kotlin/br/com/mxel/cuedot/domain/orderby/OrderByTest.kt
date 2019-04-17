@@ -18,7 +18,7 @@ class OrderByTest : BaseTest() {
     lateinit var getMoviesOrderedBy: GetMoviesOrderedBy
 
     @Test
-    fun shouldGetMoviesOrderedBy() {
+    fun `Should get movies ordered by`() {
 
         val expectedMovieList = MovieList(1, 3, 1, null)
 
@@ -32,7 +32,7 @@ class OrderByTest : BaseTest() {
     }
 
     @Test
-    fun shouldGetError() {
+    fun `Should get error`() {
 
         every { repository.getMoviesOrderedBy(any(), any()) } returns
                 Single.just(Event.error())
@@ -44,7 +44,7 @@ class OrderByTest : BaseTest() {
     }
 
     @Test
-    fun shouldGetPageError() {
+    fun `Should get page error`() {
 
         getMoviesOrderedBy.execute(Order.NOW_PLAYING, 0)
                 .test()

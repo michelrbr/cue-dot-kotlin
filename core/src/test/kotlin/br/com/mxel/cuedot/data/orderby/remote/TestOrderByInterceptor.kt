@@ -1,25 +1,31 @@
-package br.com.mxel.cuedot.data.remote
+package br.com.mxel.cuedot.data.orderby.remote
 
 import okhttp3.*
 
-class TestInterceptor: Interceptor {
+class TestOrderByInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
+
+        val response: String = if (chain.request().url().queryParameter("page") == "1") {
+            SUCCESS_PAGE_1
+        } else {
+            SUCCESS_PAGE_2
+        }
 
         return Response.Builder()
                 .code(200)
-                .message(responseListString)
+                .message("OK")
                 .request(chain.request())
                 .protocol(Protocol.HTTP_1_0)
-                .body(ResponseBody.create(MediaType.parse("application/json"), responseListString))
+                .body(ResponseBody.create(MediaType.parse("application/json"), response))
                 .addHeader("content-type", "application/json")
                 .build()
     }
 
     companion object {
-        private const val responseListString: String = "{\n" +
+        private const val SUCCESS_PAGE_1: String = "{\n" +
                 "  \"page\": 1,\n" +
-                "  \"total_results\": 6879,\n" +
-                "  \"total_pages\": 344,\n" +
+                "  \"total_results\": 6,\n" +
+                "  \"total_pages\": 2,\n" +
                 "  \"results\": [\n" +
                 "    {\n" +
                 "      \"vote_count\": 1973,\n" +
@@ -78,6 +84,74 @@ class TestInterceptor: Interceptor {
                 "      \"adult\": false,\n" +
                 "      \"overview\": \"Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.\",\n" +
                 "      \"release_date\": \"1972-03-14\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"
+
+        private const val SUCCESS_PAGE_2: String = "{\n" +
+                "  \"page\": 2,\n" +
+                "  \"total_results\": 6,\n" +
+                "  \"total_pages\": 2,\n" +
+                "  \"results\": [\n" +
+                "    {\n" +
+                "      \"vote_count\": 931,\n" +
+                "      \"id\": 287947,\n" +
+                "      \"video\": false,\n" +
+                "      \"vote_average\": 7.3,\n" +
+                "      \"title\": \"Shazam!\",\n" +
+                "      \"popularity\": 395.24,\n" +
+                "      \"poster_path\": \"\\/xnopI5Xtky18MPhK40cZAGAOVeV.jpg\",\n" +
+                "      \"original_language\": \"en\",\n" +
+                "      \"original_title\": \"Shazam!\",\n" +
+                "      \"genre_ids\": [\n" +
+                "        35,\n" +
+                "        12,\n" +
+                "        14\n" +
+                "      ],\n" +
+                "      \"backdrop_path\": \"\\/bi4jh0Kt0uuZGsGJoUUfqmbrjQg.jpg\",\n" +
+                "      \"adult\": false,\n" +
+                "      \"overview\": \"A boy is given the ability to become an adult superhero in times of need with a single magic word.\",\n" +
+                "      \"release_date\": \"2019-03-23\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"vote_count\": 3810,\n" +
+                "      \"id\": 299537,\n" +
+                "      \"video\": false,\n" +
+                "      \"vote_average\": 7.2,\n" +
+                "      \"title\": \"Captain Marvel\",\n" +
+                "      \"popularity\": 273.412,\n" +
+                "      \"poster_path\": \"\\/AtsgWhDnHTq68L0lLsUrCnM7TjG.jpg\",\n" +
+                "      \"original_language\": \"en\",\n" +
+                "      \"original_title\": \"Captain Marvel\",\n" +
+                "      \"genre_ids\": [\n" +
+                "        28,\n" +
+                "        12,\n" +
+                "        878\n" +
+                "      ],\n" +
+                "      \"backdrop_path\": \"\\/w2PMyoyLU22YvrGK3smVM9fW1jj.jpg\",\n" +
+                "      \"adult\": false,\n" +
+                "      \"overview\": \"The story follows Carol Danvers as she becomes one of the universe’s most powerful heroes when Earth is caught in the middle of a galactic war between two alien races. Set in the 1990s, Captain Marvel is an all-new adventure from a previously unseen period in the history of the Marvel Cinematic Universe.\",\n" +
+                "      \"release_date\": \"2019-03-06\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"vote_count\": 1465,\n" +
+                "      \"id\": 166428,\n" +
+                "      \"video\": false,\n" +
+                "      \"vote_average\": 7.6,\n" +
+                "      \"title\": \"How to Train Your Dragon: The Hidden World\",\n" +
+                "      \"popularity\": 247.698,\n" +
+                "      \"poster_path\": \"\\/xvx4Yhf0DVH8G4LzNISpMfFBDy2.jpg\",\n" +
+                "      \"original_language\": \"en\",\n" +
+                "      \"original_title\": \"How to Train Your Dragon: The Hidden World\",\n" +
+                "      \"genre_ids\": [\n" +
+                "        16,\n" +
+                "        10751,\n" +
+                "        12\n" +
+                "      ],\n" +
+                "      \"backdrop_path\": \"\\/h3KN24PrOheHVYs9ypuOIdFBEpX.jpg\",\n" +
+                "      \"adult\": false,\n" +
+                "      \"overview\": \"As Hiccup fulfills his dream of creating a peaceful dragon utopia, Toothless’ discovery of an untamed, elusive mate draws the Night Fury away. When danger mounts at home and Hiccup’s reign as village chief is tested, both dragon and rider must make impossible decisions to save their kind.\",\n" +
+                "      \"release_date\": \"2019-01-03\"\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}"

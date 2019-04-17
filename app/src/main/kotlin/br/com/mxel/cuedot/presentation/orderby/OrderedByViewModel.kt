@@ -23,13 +23,21 @@ class OrderedByViewModel(
     val currentOrder: LiveData<Order>
         get() = _currentOrder
 
-    val refreshLoading = MutableLiveData<Boolean>().apply { value = false }
+    private val _refreshLoading = MutableLiveData<Boolean>().apply { value = false }
+    val refreshLoading: LiveData<Boolean>
+        get() = _refreshLoading
 
-    val hasNextPage = MutableLiveData<Boolean>().apply { value = true }
+    private val _hasNextPage = MutableLiveData<Boolean>().apply { value = false }
+    val hasNextPage: LiveData<Boolean>
+        get() = _hasNextPage
 
-    val movies = MutableLiveData<ArrayList<Movie>>().apply { value = ArrayList() }
+    private val _movies = MutableLiveData<ArrayList<Movie>>().apply { value = ArrayList() }
+    val movies: LiveData<ArrayList<Movie>>
+        get() = _movies
 
-    val error = MutableLiveData<Event.Error?>().apply { value = null }
+    private val _error = MutableLiveData<Event.Error?>().apply { value = null }
+    val error: LiveData<Event.Error?>
+        get() = _error
 
     fun getMovies(order: Order) {
 
@@ -40,15 +48,16 @@ class OrderedByViewModel(
                 .observeOn(scheduler.mainThread)
                 .subscribe {
 
-                    refreshLoading.value = it.isLoading()
+                    _refreshLoading.value = it.isLoading()
 
                     when (it) {
                         is Event.Data -> {
                             totalPages = it.data.totalPages
-                            hasNextPage.value = (currentPage < totalPages)
-                            movies.value = ArrayList(it.data.movies ?: emptyList())
+                            currentPage = it.data.page
+                            _hasNextPage.value = (currentPage < totalPages)
+                            _movies.value = ArrayList(it.data.movies ?: emptyList())
                         }
-                        is Event.Error -> error.value = it
+                        is Event.Error -> _error.value = it
                     }
                     checkIfCanDispose(it)
                 }
@@ -74,16 +83,18 @@ class OrderedByViewModel(
                     .subscribe {
                         when (it) {
                             is Event.Data -> {
-                                hasNextPage.value = (currentPage < totalPages)
-                                movies.value = ArrayList(it.data.movies ?: emptyList())
+                                totalPages = it.data.totalPages
+                                currentPage = it.data.page
+                                _hasNextPage.value = (currentPage < totalPages)
+                                _movies.value = ArrayList(it.data.movies ?: emptyList())
                             }
-                            is Event.Error -> error.value = it
+                            is Event.Error -> _error.value = it
                         }
                         checkIfCanDispose(it)
                     }
                     .addTo(disposable)
         } else {
-            hasNextPage.value = false
+            _hasNextPage.value = false
         }
     }
 }

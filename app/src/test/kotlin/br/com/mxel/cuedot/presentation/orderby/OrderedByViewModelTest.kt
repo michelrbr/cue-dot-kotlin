@@ -4,9 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.di.orderByModule
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.orderby.Order
+import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.verify
+import io.mockk.verifySequence
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -19,21 +21,13 @@ import testNetworkModule
 
 class OrderedByViewModelTest : BaseTest(), KoinTest {
 
-    /*private val schedulerProvider = SchedulerProvider(Schedulers.trampoline(), Schedulers.trampoline())
+    private val viewModel: OrderedByViewModel by inject()
 
     @RelaxedMockK
-    lateinit var repository: IOrderedByRepository
-
-    @InjectMockKs
-    lateinit var getMoviesOrderedBy: GetMoviesOrderedBy
-
-    @InjectMockKs
-    lateinit var viewModel: OrderedByViewModel*/
-
-    val viewModel: OrderedByViewModel by inject()
+    lateinit var orderObserver: Observer<Order>
 
     @RelaxedMockK
-    lateinit var moviesObserver: Observer<ArrayList<Movie>>
+    lateinit var refreshObserver: Observer<Boolean>
 
     @RelaxedMockK
     lateinit var nextPageObserver: Observer<Boolean>
@@ -58,53 +52,38 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
     @Test
     fun `Should load more movies`() {
 
-        /*val firstExpectedMovies = arrayListOf(
-                Movie(1, "First"),
-                Movie(2, "Second"),
-                Movie(3, "Third")
-        )
-
-        val secondExpectedMovies = arrayListOf(
-                Movie(4, "Forth"),
-                Movie(5, "Fifth"),
-                Movie(6, "Sixth")
-        )
-
-        val finalExpectedMovies = ArrayList(firstExpectedMovies + secondExpectedMovies)
-
-        val firsExpectedResult = MovieList(1, 6, 2, firstExpectedMovies)
-        val secondExpectedResult = MovieList(2, 6, 2, secondExpectedMovies)
-
-        every { repository.getMoviesOrderedBy(any(), 1) } returns
-                Single.just(Event.data(firsExpectedResult))
-
-        every { repository.getMoviesOrderedBy(any(), 2) } returns
-                Single.just(Event.data(secondExpectedResult))*/
-
-        viewModel.movies.observeForever(moviesObserver)
+        viewModel.currentOrder.observeForever(orderObserver)
+        viewModel.refreshLoading.observeForever(refreshObserver)
         viewModel.hasNextPage.observeForever(nextPageObserver)
 
         viewModel.getMovies(Order.POPULAR)
 
         assertEquals(viewModel.movies.value?.size, 3)
 
-        /*verify { nextPageObserver.onChanged(true) }
-        verifyOrder {
-            moviesObserver.onChanged(arrayListOf())
-            moviesObserver.onChanged(firstExpectedMovies)
-        }
-
         viewModel.loadMore()
 
-        verify { nextPageObserver.onChanged(false) }
-        verify { moviesObserver.onChanged(finalExpectedMovies) }
+        verify(exactly = 1) { orderObserver.onChanged(Order.POPULAR) }
 
-        confirmVerified(moviesObserver)
+        verifySequence {
+            nextPageObserver.onChanged(false)
+            nextPageObserver.onChanged(true)
+            nextPageObserver.onChanged(false)
+        }
+
+        verifySequence {
+            refreshObserver.onChanged(false)
+            refreshObserver.onChanged(true)
+            refreshObserver.onChanged(false)
+        }
+
+        assertEquals(viewModel.movies.value?.size, 6)
+
         confirmVerified(nextPageObserver)
+        confirmVerified(refreshObserver)
 
         assertEquals(
-                arrayListOf(1, 2, 3, 4, 5, 6),
-                finalExpectedMovies.map { it.id.toInt() }
-        )*/
+                arrayListOf(19404, 278, 238, 287947, 299537, 166428),
+                viewModel.movies.value?.map { it.id.toInt() }
+        )
     }
 }

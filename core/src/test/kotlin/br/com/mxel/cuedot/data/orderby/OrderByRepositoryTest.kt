@@ -2,26 +2,25 @@ package br.com.mxel.cuedot.data.orderby
 
 import br.com.mxel.cuedot.data.orderby.remote.IOrderedByClient
 import br.com.mxel.cuedot.data.orderby.remote.OrderedByRemoteData
+import br.com.mxel.cuedot.data.orderby.remote.TestOrderByInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
-import br.com.mxel.cuedot.data.remote.TestInterceptor
 import br.com.mxel.cuedot.domain.BaseTest
 import br.com.mxel.cuedot.domain.Event
-import br.com.mxel.cuedot.domain.entity.MovieList
 import br.com.mxel.cuedot.domain.orderby.Order
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Test
 
-class OrderByRepositoryTest: BaseTest() {
+class OrderByRepositoryTest : BaseTest() {
 
-    val interceptor = TestInterceptor()
+    private val interceptor = TestOrderByInterceptor()
 
-    val orderedByClient = RemoteClientFactory(
+    private val orderedByClient = RemoteClientFactory(
             null,
             interceptor,
-            false
+            true
     ).createClient(IOrderedByClient::class)
 
-    val apiVersion = "3"
+    private val apiVersion = "3"
 
     @InjectMockKs
     lateinit var remoteData: OrderedByRemoteData
@@ -30,7 +29,7 @@ class OrderByRepositoryTest: BaseTest() {
     lateinit var repository: OrderedByRepository
 
     @Test
-    fun shouldGetOrderedList() {
+    fun `Should get ordered list`() {
 
         repository.getMoviesOrderedBy(Order.POPULAR, 1)
                 .test()

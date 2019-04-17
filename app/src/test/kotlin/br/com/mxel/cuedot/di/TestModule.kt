@@ -1,5 +1,5 @@
+import br.com.mxel.cuedot.data.orderby.remote.TestOrderByInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
-import br.com.mxel.cuedot.data.remote.TestInterceptor
 import br.com.mxel.cuedot.di.IS_DEBUG
 import br.com.mxel.cuedot.domain.SchedulerProvider
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +18,7 @@ val testNetworkModule = module {
     single {
         RemoteClientFactory(
                 null,
-                TestInterceptor(),
+                TestOrderByInterceptor(),
                 get(IS_DEBUG)
         )
     }
