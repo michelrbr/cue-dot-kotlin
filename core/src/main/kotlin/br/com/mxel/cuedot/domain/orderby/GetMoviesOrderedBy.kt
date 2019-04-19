@@ -15,7 +15,8 @@ class GetMoviesOrderedBy(
 
     private fun getMoviesOrderedBy(orderBy: Order, page: Int): Observable<Event<MovieList>> {
 
-        return if (page < 1) {
+        // This is the accepted rage of pages from API
+        return if (page < 1 || page > 1000) {
             Observable.just(Event.error(OrderByError.INVALID_PAGE))
         } else {
             repository.getMoviesOrderedBy(orderBy, page).toObservable()
