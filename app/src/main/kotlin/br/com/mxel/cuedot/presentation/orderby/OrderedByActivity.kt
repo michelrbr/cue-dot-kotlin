@@ -71,6 +71,7 @@ class OrderedByActivity : BaseActivity() {
 
     private fun showError(error: Event.Error?) {
 
+        // TODO Handle different error types
         if (error != null) {
             moviesListView.showFeedbackStatus(getString(error.message(error.error)))
         }

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.di.orderByModule
 import br.com.mxel.cuedot.domain.BaseTest
+import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.orderby.Order
 import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
@@ -32,6 +33,9 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
     @RelaxedMockK
     lateinit var nextPageObserver: Observer<Boolean>
 
+    @RelaxedMockK
+    lateinit var errorObserver: Observer<Event.Error?>
+
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
@@ -55,6 +59,7 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
         viewModel.currentOrder.observeForever(orderObserver)
         viewModel.refreshLoading.observeForever(refreshObserver)
         viewModel.hasNextPage.observeForever(nextPageObserver)
+        viewModel.error.observeForever(errorObserver)
 
         viewModel.getMovies(Order.POPULAR)
 
@@ -75,6 +80,8 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
             refreshObserver.onChanged(true)
             refreshObserver.onChanged(false)
         }
+
+        verify(exactly = 1) { errorObserver.onChanged(null) }
 
         assertEquals(viewModel.movies.value?.size, 6)
 

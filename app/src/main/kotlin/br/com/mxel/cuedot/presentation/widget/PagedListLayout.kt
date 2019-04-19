@@ -32,6 +32,7 @@ class PagedListLayout : SwipeRefreshLayout {
         val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
 
         recyclerView.setHasFixedSize(true)
+        recyclerView.itemAnimator = null
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         content.addView(recyclerView, layoutParams)

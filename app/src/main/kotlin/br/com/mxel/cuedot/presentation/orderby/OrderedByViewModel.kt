@@ -54,6 +54,9 @@ class OrderedByViewModel(
                         is Event.Data -> {
                             totalPages = it.data.totalPages
                             currentPage = it.data.page
+                            if (_error.value != null) {
+                                _error.value = null
+                            }
                             _hasNextPage.value = (currentPage < totalPages)
                             _movies.value = ArrayList(it.data.movies ?: emptyList())
                         }
@@ -85,6 +88,9 @@ class OrderedByViewModel(
                             is Event.Data -> {
                                 totalPages = it.data.totalPages
                                 currentPage = it.data.page
+                                if (_error.value != null) {
+                                    _error.value = null
+                                }
                                 _hasNextPage.value = (currentPage < totalPages)
                                 _movies.value = ArrayList(it.data.movies ?: emptyList())
                             }
