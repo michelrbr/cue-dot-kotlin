@@ -73,6 +73,10 @@ dependencies {
     // HTTP
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
+    // Leak canary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
     // Test
     testImplementation project(path: ':core', configuration: 'testOutput')
     testImplementation "junit:junit:$junitVersion"
