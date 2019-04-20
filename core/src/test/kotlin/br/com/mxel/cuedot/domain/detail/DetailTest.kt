@@ -18,7 +18,7 @@ class DetailTest : BaseTest() {
     lateinit var getMovieDetail: GetMovieDetail
 
     @Test
-    fun shouldGetMovieDetail() {
+    fun `Should get movie detail`() {
 
         val expectedMovie = Movie(id = 1, title = "Test movie")
 
@@ -32,7 +32,7 @@ class DetailTest : BaseTest() {
     }
 
     @Test
-    fun shouldGetArgumentError() {
+    fun `Should get argument error`() {
 
         getMovieDetail.execute(0)
                 .test()
