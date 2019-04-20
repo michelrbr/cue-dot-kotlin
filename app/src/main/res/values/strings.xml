@@ -20,4 +20,5 @@
     <string name="connection_lost">There\'s no internet connection</string>
     <string name="invalid_page">Page not found</string>
     <string name="generic_error">Sorry, an error has occurred</string>
+    <string name="empty_order">You need to choose a category to list movies</string>
 </resources>

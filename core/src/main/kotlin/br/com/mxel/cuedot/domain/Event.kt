@@ -4,7 +4,7 @@ sealed class Event<out T> {
 
     data class Data<T>(val data: T) : Event<T>()
 
-    data class Error(val error: IError, val cause: Throwable?) : Event<Nothing>()
+    data class Error(val error: IError, val cause: Throwable? = null) : Event<Nothing>()
 
     object Loading : Event<Nothing>()
 
