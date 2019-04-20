@@ -12,15 +12,11 @@ import org.junit.Test
 
 class OrderByRepositoryTest : BaseTest() {
 
-    private val interceptor = TestOrderByInterceptor()
-
     private val orderedByClient = RemoteClientFactory(
             null,
-            interceptor,
+            TestOrderByInterceptor(),
             true
     ).createClient(IOrderedByClient::class)
-
-    private val apiVersion = "3"
 
     @InjectMockKs
     lateinit var remoteData: OrderedByRemoteData

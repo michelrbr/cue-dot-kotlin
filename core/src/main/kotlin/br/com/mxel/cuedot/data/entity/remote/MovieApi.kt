@@ -1,5 +1,6 @@
 package br.com.mxel.cuedot.data.entity.remote
 
+import br.com.mxel.cuedot.data.entity.IDomainMapper
 import br.com.mxel.cuedot.data.remote.ApiProvider
 import br.com.mxel.cuedot.domain.entity.Movie
 import com.squareup.moshi.Json
@@ -18,9 +19,9 @@ data class MovieApi(
         val releaseDate: String? = null,
         val homepage: String? = null,
         val video: Boolean? = false
-) {
+) : IDomainMapper<Movie> {
 
-    fun toMovie() = Movie(
+    override fun toDomain() = Movie(
             id,
             title,
             String.format("%s/%s%s", ApiProvider.IMAGES_BASE_PATH, ApiProvider.POSTER_SIZE, posterPath),
