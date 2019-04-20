@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.orderby.Order
+import br.com.mxel.cuedot.domain.orderby.OrderByError
 import br.com.mxel.cuedot.extension.message
 import br.com.mxel.cuedot.presentation.base.BaseActivity
 import br.com.mxel.cuedot.presentation.orderby.widget.MovieListAdapter
@@ -48,7 +49,7 @@ class OrderedByActivity : BaseActivity() {
         moviesListView.adapter = adapter
 
         moviesListView.setOnRefreshListener {
-            viewModel.getMovies(viewModel.currentOrder.value!!)
+            viewModel.refresh()
         }
 
         viewModel.currentOrder.observe(this, Observer { setupView(it) })
@@ -71,9 +72,11 @@ class OrderedByActivity : BaseActivity() {
 
     private fun showError(error: Event.Error?) {
 
-        // TODO Handle different error types
-        if (error != null) {
-            moviesListView.showFeedbackStatus(getString(error.message(error.error)))
+        error?.let {
+            when (it.error) {
+                OrderByError.EMPTY_ORDER -> showOrderChooserDialog()
+                else -> moviesListView.showFeedbackStatus(getString(error.message(it.error)))
+            }
         }
     }
 
@@ -90,16 +93,20 @@ class OrderedByActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         if (item?.itemId == R.id.action_order_by) {
-            AlertDialog.Builder(this).apply {
-                setItems(orderArray) { dialogInterface, position ->
-
-                    adapter.submitList(null)
-                    viewModel.getMovies(Order.values()[position])
-                    dialogInterface.dismiss()
-                }
-            }.show()
+            showOrderChooserDialog()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showOrderChooserDialog() {
+        AlertDialog.Builder(this).apply {
+            setItems(orderArray) { dialogInterface, position ->
+
+                adapter.submitList(null)
+                viewModel.getMovies(Order.values()[position])
+                dialogInterface.dismiss()
+            }
+        }.show()
     }
 
     private fun setupView(order: Order?) {

@@ -8,6 +8,7 @@ import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.entity.MovieList
 import br.com.mxel.cuedot.domain.orderby.GetMoviesOrderedBy
 import br.com.mxel.cuedot.domain.orderby.Order
+import br.com.mxel.cuedot.domain.orderby.OrderByError
 import br.com.mxel.cuedot.presentation.base.BaseViewModel
 import io.reactivex.rxkotlin.addTo
 
@@ -39,9 +40,21 @@ class OrderedByViewModel(
     val error: LiveData<Event.Error?>
         get() = _error
 
+    fun refresh() {
+        if (_currentOrder.value != null) {
+            _refreshLoading.value = true
+            getMovies(_currentOrder.value!!)
+        } else {
+            _refreshLoading.value = false
+            _error.value = Event.Error(OrderByError.EMPTY_ORDER)
+        }
+    }
+
     fun getMovies(order: Order) {
 
-        _currentOrder.value = order
+        if (_currentOrder.value != order) {
+            _currentOrder.value = order
+        }
         currentPage = 1
         getMoviesOrderedBy.execute(order, currentPage)
                 .subscribeOn(scheduler.backgroundThread)
