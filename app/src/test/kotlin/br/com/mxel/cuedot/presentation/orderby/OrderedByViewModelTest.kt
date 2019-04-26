@@ -48,10 +48,7 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
         ))
     }
 
-    override fun finish() {
-
-        stopKoin()
-    }
+    override fun finish() = stopKoin()
 
     @Test
     fun `Should load more movies`() {
@@ -63,7 +60,7 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
 
         viewModel.getMovies(Order.POPULAR)
 
-        assertEquals(viewModel.movies.value?.size, 3)
+        assertEquals(viewModel.movies.value?.size, 20)
 
         viewModel.loadMore()
 
@@ -83,14 +80,9 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
 
         verify(exactly = 1) { errorObserver.onChanged(null) }
 
-        assertEquals(viewModel.movies.value?.size, 6)
+        assertEquals(viewModel.movies.value?.size, 40)
 
         confirmVerified(nextPageObserver)
         confirmVerified(refreshObserver)
-
-        assertEquals(
-                arrayListOf(19404, 278, 238, 287947, 299537, 166428),
-                viewModel.movies.value?.map { it.id.toInt() }
-        )
     }
 }
