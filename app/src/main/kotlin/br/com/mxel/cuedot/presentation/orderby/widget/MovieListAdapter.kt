@@ -6,13 +6,20 @@ import androidx.recyclerview.widget.DiffUtil
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.presentation.widget.PagedAdapter
+import io.reactivex.subjects.PublishSubject
 
 class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
+
+    val notifyMovieClick: PublishSubject<Movie> = PublishSubject.create()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_view_holder, parent, false)
-        return MovieViewHolder(view)
+        return MovieViewHolder(view).apply {
+            notifyItemClick.subscribe {
+                notifyMovieClick.onNext(it)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {

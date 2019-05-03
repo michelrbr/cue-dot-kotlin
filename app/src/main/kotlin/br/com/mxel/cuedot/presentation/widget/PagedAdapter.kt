@@ -2,10 +2,13 @@ package br.com.mxel.cuedot.presentation.widget
 
 import androidx.recyclerview.widget.*
 import br.com.mxel.cuedot.presentation.base.BaseViewHolder
+import io.reactivex.disposables.CompositeDisposable
 
 abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<VH> {
 
     private val helper: AsyncListDiffer<T>
+
+    protected val disposable = CompositeDisposable()
 
     protected var loading: Boolean = false
 
@@ -51,6 +54,7 @@ abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<VH
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
 
+        disposable.clear()
         recyclerView.removeOnScrollListener(scrollListener)
         super.onDetachedFromRecyclerView(recyclerView)
     }

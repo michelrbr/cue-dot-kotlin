@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.Event
@@ -13,12 +14,14 @@ import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.domain.orderby.OrderByError
 import br.com.mxel.cuedot.extension.message
 import br.com.mxel.cuedot.presentation.base.BaseActivity
+import br.com.mxel.cuedot.presentation.detail.DetailActivity
 import br.com.mxel.cuedot.presentation.orderby.widget.MovieListAdapter
 import br.com.mxel.cuedot.presentation.widget.PagedAdapter
 import br.com.mxel.cuedot.presentation.widget.PagedListLayout
 import butterknife.BindArray
 import butterknife.BindView
 import butterknife.ButterKnife
+import io.reactivex.rxkotlin.addTo
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class OrderedByActivity : BaseActivity() {
@@ -31,6 +34,8 @@ class OrderedByActivity : BaseActivity() {
     lateinit var orderArray: Array<String>
 
     // UI
+    @BindView(R.id.toolbar)
+    lateinit var toolbar: Toolbar
     @BindView(R.id.movie_list)
     lateinit var moviesListView: PagedListLayout
 
@@ -40,11 +45,17 @@ class OrderedByActivity : BaseActivity() {
 
         unbinder = ButterKnife.bind(this)
 
+        setSupportActionBar(toolbar)
+
         adapter.loadMoreListener = object : PagedAdapter.ILoadMoreListener {
             override fun onLoadMore() {
                 viewModel.loadMore()
             }
         }
+
+        adapter.notifyMovieClick.subscribe {
+            DetailActivity.launch(this, it.id)
+        }.addTo(disposable)
 
         moviesListView.adapter = adapter
 

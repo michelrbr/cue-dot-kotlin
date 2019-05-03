@@ -23,6 +23,8 @@
         </activity>
 
         <activity android:name=".presentation.orderby.OrderedByActivity" />
+
+        <activity android:name=".presentation.detail.DetailActivity" />
     </application>
 
 </manifest>
