@@ -5,17 +5,24 @@ import java.io.File
 
 abstract class BaseTestInterceptor : Interceptor {
 
-    protected fun getJson(path : String) : String {
+    protected fun getResponse(path : String) : Pair<Int, String> {
+        return File(path)
+                .takeIf { it.exists() }
+                ?.let { Pair(200, String(it.readBytes())) }
+                ?: Pair(
+                        404,
+                        String(File(getFilePath("error_resource_not_found.json")).readBytes())
+                )
+    }
 
-        val url = this.javaClass.classLoader?.getResource(path)?.path ?: ""
-
-        return File(url).takeIf { it.exists() }?.let { String(it.readBytes()) } ?: ""
+    protected fun getFilePath(path : String): String {
+        return this.javaClass.classLoader?.getResource(path)?.path ?: ""
     }
 
     protected fun buildResponse(body: String, request: Request, code: Int = 200): Response {
         return  Response.Builder()
                 .code(code)
-                .message("OK")
+                .message(code.takeIf { it == 200 }?.let {"OK"} ?: "Error")
                 .request(request)
                 .protocol(Protocol.HTTP_1_0)
                 .body(ResponseBody.create(MediaType.parse("application/json"), body))
