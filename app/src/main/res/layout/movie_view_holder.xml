@@ -8,8 +8,8 @@
     android:orientation="horizontal"
     android:padding="@dimen/small_margin">
 
-    <ImageView
-        android:id="@+id/movie_cover"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cover_image"
         android:layout_width="@dimen/cover_width"
         android:layout_height="@dimen/cover_height"
         android:contentDescription="@string/movie_cover"
@@ -19,25 +19,25 @@
         tools:src="@tools:sample/avatars" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/movie_title"
+        android:id="@+id/title_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/normal_margin"
         android:textSize="@dimen/large_font"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/movie_cover"
+        app:layout_constraintStart_toEndOf="@id/cover_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.AppCompatRatingBar
-        android:id="@+id/rating"
+        android:id="@+id/vote_average_rating"
         style="@style/Base.Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/normal_margin"
-        app:layout_constraintTop_toBottomOf="@id/movie_title"
-        app:layout_constraintStart_toEndOf="@id/movie_cover"
+        app:layout_constraintTop_toBottomOf="@id/title_text_view"
+        app:layout_constraintStart_toEndOf="@id/cover_image"
         tools:rating="3.5" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -46,9 +46,9 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/small_font"
         android:layout_margin="@dimen/normal_margin"
-        app:layout_constraintTop_toBottomOf="@id/rating"
+        app:layout_constraintTop_toBottomOf="@id/vote_average_rating"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/movie_cover"
+        app:layout_constraintStart_toEndOf="@id/cover_image"
         tools:text="@tools:sample/date/mmddyy" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

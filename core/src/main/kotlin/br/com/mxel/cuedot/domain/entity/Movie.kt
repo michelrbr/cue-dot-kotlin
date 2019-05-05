@@ -1,6 +1,6 @@
 package br.com.mxel.cuedot.domain.entity
 
-data class Movie (
+data class Movie(
         val id: Long = 0,
         val title: String? = null,
         val posterPath: String? = null,

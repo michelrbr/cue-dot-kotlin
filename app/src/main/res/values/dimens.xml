@@ -4,6 +4,7 @@
     <dimen name="small_margin">4dp</dimen>
     <dimen name="normal_margin">8dp</dimen>
     <dimen name="large_margin">16dp</dimen>
+    <dimen name="x_large_margin">24dp</dimen>
 
     <!-- Font size -->
     <dimen name="small_font">12sp</dimen>

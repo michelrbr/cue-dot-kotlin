@@ -15,13 +15,13 @@ import io.reactivex.subjects.PublishSubject
 class MovieViewHolder(view: View) : BaseViewHolder<Movie>(view) {
 
     // UI
-    @BindView(R.id.movie_title)
+    @BindView(R.id.title_text_view)
     lateinit var title: AppCompatTextView
     @BindView(R.id.release_date_text_view)
     lateinit var date: AppCompatTextView
-    @BindView(R.id.rating)
+    @BindView(R.id.vote_average_rating)
     lateinit var ratingBar: AppCompatRatingBar
-    @BindView(R.id.movie_cover)
+    @BindView(R.id.cover_image)
     lateinit var movieCover: ImageView
 
     val notifyItemClick: PublishSubject<Movie> = PublishSubject.create()
