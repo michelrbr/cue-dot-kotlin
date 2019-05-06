@@ -2,6 +2,10 @@ package br.com.mxel.cuedot.di
 
 import android.content.Context
 import br.com.mxel.cuedot.BuildConfig
+import br.com.mxel.cuedot.data.detail.MovieDetailRepository
+import br.com.mxel.cuedot.data.detail.remote.IMovieDetailClient
+import br.com.mxel.cuedot.data.detail.remote.IMovieDetailRemoteData
+import br.com.mxel.cuedot.data.detail.remote.MovieDetailRemoteData
 import br.com.mxel.cuedot.data.orderby.OrderedByRepository
 import br.com.mxel.cuedot.data.orderby.remote.IOrderedByClient
 import br.com.mxel.cuedot.data.orderby.remote.IOrderedByRemoteData
@@ -9,8 +13,11 @@ import br.com.mxel.cuedot.data.orderby.remote.OrderedByRemoteData
 import br.com.mxel.cuedot.data.remote.MovieInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
 import br.com.mxel.cuedot.domain.SchedulerProvider
+import br.com.mxel.cuedot.domain.detail.GetMovieDetail
+import br.com.mxel.cuedot.domain.detail.IMovieDetailRepository
 import br.com.mxel.cuedot.domain.orderby.GetMoviesOrderedBy
 import br.com.mxel.cuedot.domain.orderby.IOrderedByRepository
+import br.com.mxel.cuedot.presentation.detail.DetailViewModel
 import br.com.mxel.cuedot.presentation.orderby.OrderedByViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -55,6 +62,19 @@ val orderByModule = module {
     factory<GetMoviesOrderedBy>()
 
     viewModel<OrderedByViewModel>()
+}
+
+val detailModule = module {
+
+    single { get<RemoteClientFactory>().createClient(IMovieDetailClient::class) }
+
+    singleBy<IMovieDetailRemoteData, MovieDetailRemoteData>()
+
+    singleBy<IMovieDetailRepository, MovieDetailRepository>()
+
+    factory<GetMovieDetail>()
+
+    viewModel<DetailViewModel>()
 }
 
 private fun getCacheDir(context: Context?): File? = context?.cacheDir

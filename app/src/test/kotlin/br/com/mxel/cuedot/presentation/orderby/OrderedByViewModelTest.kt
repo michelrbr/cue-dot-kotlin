@@ -18,7 +18,7 @@ import org.koin.standalone.StandAloneContext.stopKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import testAppModule
-import testNetworkModule
+import testOrderNetworkModule
 
 class OrderedByViewModelTest : BaseTest(), KoinTest {
 
@@ -43,7 +43,7 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
 
         startKoin(listOf(
                 testAppModule,
-                testNetworkModule,
+                testOrderNetworkModule,
                 orderByModule
         ))
     }
