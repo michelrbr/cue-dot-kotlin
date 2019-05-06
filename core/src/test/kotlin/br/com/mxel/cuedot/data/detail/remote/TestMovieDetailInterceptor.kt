@@ -17,7 +17,7 @@ class TestMovieDetailInterceptor : BaseTestInterceptor() {
     override fun buildJsonPath(url: HttpUrl): String {
 
         val movieId = try {
-            url.pathSegments()[1].toInt()
+            url.pathSegments()[2].toInt()
         } catch (e: Exception) {
             0
         }

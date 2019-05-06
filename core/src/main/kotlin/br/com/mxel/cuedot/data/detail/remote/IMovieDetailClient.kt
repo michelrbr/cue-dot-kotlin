@@ -10,6 +10,9 @@ interface IMovieDetailClient {
     // https://developers.themoviedb.org/3/getting-started/append-to-response
     // Append videos and images to response (But it comes on ListVideoResult)
     // &append_to_response=videos,images
-    @GET("movie/{movie_id}")
-    fun getMovie(@Path("movie_id") movieId: Long): Single<MovieApi>
+    @GET("{version}/movie/{movie_id}")
+    fun getMovie(
+            @Path("version") version: String,
+            @Path("movie_id") movieId: Long
+    ): Single<MovieApi>
 }
