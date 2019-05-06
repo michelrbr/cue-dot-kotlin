@@ -1,7 +1,7 @@
 import br.com.mxel.cuedot.data.detail.remote.TestMovieDetailInterceptor
 import br.com.mxel.cuedot.data.orderby.remote.TestOrderByInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
-import br.com.mxel.cuedot.di.IS_DEBUG
+import br.com.mxel.cuedot.koin.IS_DEBUG
 import br.com.mxel.cuedot.domain.SchedulerProvider
 import io.reactivex.schedulers.Schedulers
 import org.koin.dsl.module.module

@@ -2,7 +2,7 @@ package br.com.mxel.cuedot.presentation.orderby
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import br.com.mxel.cuedot.di.orderByModule
+import br.com.mxel.cuedot.koin.orderByModule
 import br.com.mxel.cuedot.domain.BaseTest
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.orderby.Order

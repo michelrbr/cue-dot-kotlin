@@ -1,4 +1,4 @@
-package br.com.mxel.cuedot.di
+package br.com.mxel.cuedot.koin
 
 import android.content.Context
 import br.com.mxel.cuedot.BuildConfig
