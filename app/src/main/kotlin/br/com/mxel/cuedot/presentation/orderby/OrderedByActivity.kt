@@ -18,7 +18,7 @@ import br.com.mxel.cuedot.presentation.base.BaseActivity
 import br.com.mxel.cuedot.presentation.detail.DetailActivity
 import br.com.mxel.cuedot.presentation.orderby.widget.MovieListAdapter
 import br.com.mxel.cuedot.presentation.widget.PagedAdapter
-import br.com.mxel.cuedot.presentation.widget.PagedListLayout
+import br.com.mxel.cuedot.presentation.widget.ListLayout
 import butterknife.BindArray
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -38,7 +38,7 @@ class OrderedByActivity : BaseActivity() {
     @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
     @BindView(R.id.movie_list)
-    lateinit var moviesListView: PagedListLayout
+    lateinit var moviesListView: ListLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

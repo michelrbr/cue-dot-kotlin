@@ -77,9 +77,8 @@ abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<Re
     override fun getItemViewType(position: Int): Int {
 
         return position.takeIf { it > helper.currentList.size - 1 }
-                ?.let {
-                    if (errorState) ERROR_VIEW else LOADING_VIEW
-                } ?: ITEM_VIEW
+                ?.let { if (errorState) ERROR_VIEW else LOADING_VIEW }
+                ?: ITEM_VIEW
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {

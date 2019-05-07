@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <br.com.mxel.cuedot.presentation.widget.PagedListLayout
+    <br.com.mxel.cuedot.presentation.widget.ListLayout
         android:id="@+id/movie_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"

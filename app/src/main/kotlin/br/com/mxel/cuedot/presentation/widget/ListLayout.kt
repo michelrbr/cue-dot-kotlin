@@ -10,12 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mxel.cuedot.R
 
-class PagedListLayout : SwipeRefreshLayout {
+class ListLayout : SwipeRefreshLayout {
 
     var adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>?
         get() = recyclerView.adapter
         set(value) {
             recyclerView.adapter = value
+        }
+
+    var layoutManager: RecyclerView.LayoutManager?
+        get() = recyclerView.layoutManager
+        set(value) {
+            recyclerView.layoutManager = value
         }
 
     private val content: FrameLayout = FrameLayout(context)
@@ -33,7 +39,9 @@ class PagedListLayout : SwipeRefreshLayout {
 
         recyclerView.setHasFixedSize(true)
         recyclerView.itemAnimator = null
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.takeIf { it.layoutManager == null }.apply {
+            layoutManager = LinearLayoutManager(context)
+        }
 
         content.addView(recyclerView, layoutParams)
 
