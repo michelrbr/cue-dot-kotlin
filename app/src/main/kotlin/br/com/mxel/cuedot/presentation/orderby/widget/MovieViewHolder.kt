@@ -10,7 +10,6 @@ import br.com.mxel.cuedot.presentation.base.BaseViewHolder
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
-import io.reactivex.subjects.PublishSubject
 
 class MovieViewHolder(view: View) : BaseViewHolder<Movie>(view) {
 
@@ -23,8 +22,6 @@ class MovieViewHolder(view: View) : BaseViewHolder<Movie>(view) {
     lateinit var ratingBar: AppCompatRatingBar
     @BindView(R.id.cover_image)
     lateinit var movieCover: ImageView
-
-    val notifyItemClick: PublishSubject<Movie> = PublishSubject.create()
 
     init {
         ButterKnife.bind(this, view)

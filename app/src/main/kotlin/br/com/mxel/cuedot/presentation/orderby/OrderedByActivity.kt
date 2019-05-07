@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
+import br.com.mxel.cuedot.data.remote.RemoteError
 import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.domain.orderby.OrderByError
@@ -86,6 +87,11 @@ class OrderedByActivity : BaseActivity() {
         error?.let {
             when (it.error) {
                 OrderByError.EMPTY_ORDER -> showOrderChooserDialog()
+                RemoteError.CONNECTION_LOST -> if (viewModel.movies.value.isNullOrEmpty()) {
+                    moviesListView.showFeedbackStatus(getString(error.message(it.error)))
+                } else {
+                    adapter.showLoadMoreError()
+                }
                 else -> moviesListView.showFeedbackStatus(getString(error.message(it.error)))
             }
         }

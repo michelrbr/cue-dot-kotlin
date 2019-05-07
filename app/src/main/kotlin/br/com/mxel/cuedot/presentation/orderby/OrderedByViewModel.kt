@@ -55,6 +55,8 @@ class OrderedByViewModel(
         if (_currentOrder.value != order) {
             _currentOrder.value = order
         }
+        _movies.value = ArrayList()
+
         currentPage = 1
         getMoviesOrderedBy.execute(order, currentPage)
                 .subscribeOn(scheduler.backgroundThread)

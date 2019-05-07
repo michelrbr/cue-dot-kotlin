@@ -56,6 +56,7 @@ class PagedListLayout : SwipeRefreshLayout {
 
     fun showFeedbackStatus(feedbackMessage: String) {
 
+        isRefreshing = false
         if (feedbackView == null) {
             feedbackView = createFeedbackView()
             content.addView(feedbackView)

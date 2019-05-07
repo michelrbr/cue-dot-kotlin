@@ -12,8 +12,7 @@ class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
 
     val notifyMovieClick: PublishSubject<Movie> = PublishSubject.create()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-
+    override fun createItemView(parent: ViewGroup): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_view_holder, parent, false)
         return MovieViewHolder(view).apply {
             notifyItemClick.subscribe {
@@ -22,8 +21,7 @@ class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
         }
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-
+    override fun bindItemView(holder: MovieViewHolder, position: Int) {
         holder.bindItem(getItem(position))
     }
 
