@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.presentation.widget.PagedAdapter
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 
 class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
@@ -17,7 +18,7 @@ class MovieListAdapter : PagedAdapter<Movie, MovieViewHolder>(DIFF_CALLBACK) {
         return MovieViewHolder(view).apply {
             notifyItemClick.subscribe {
                 notifyMovieClick.onNext(it)
-            }
+            }.addTo(disposable)
         }
     }
 
