@@ -11,14 +11,15 @@ import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.data.remote.RemoteError
 import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.domain.orderby.OrderByError
 import br.com.mxel.cuedot.extension.message
 import br.com.mxel.cuedot.presentation.base.BaseActivity
 import br.com.mxel.cuedot.presentation.detail.DetailActivity
 import br.com.mxel.cuedot.presentation.orderby.widget.MovieListAdapter
-import br.com.mxel.cuedot.presentation.widget.PagedAdapter
 import br.com.mxel.cuedot.presentation.widget.ListLayout
+import br.com.mxel.cuedot.presentation.widget.PagedAdapter
 import butterknife.BindArray
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -65,12 +66,12 @@ class OrderedByActivity : BaseActivity() {
         }
 
         viewModel.currentOrder.observe(this, Observer { setupView(it) })
-        viewModel.movies.observe(this, Observer { adapter.submitList(it) })
-        viewModel.refreshLoading.observe(this, Observer { moviesListView.isRefreshing = it })
+        viewModel.movies.observe(this, Observer { onMoviesEvent(it) })
+        //viewModel.refreshLoading.observe(this, Observer { moviesListView.isRefreshing = it })
         viewModel.error.observe(this, Observer { showError(it) })
         viewModel.hasNextPage.observe(this, Observer { adapter.loadEnable = it })
 
-        if (viewModel.movies.value?.isEmpty() == true) {
+        if (viewModel.movies.value is Event.Idle) {
 
             val currentOrder: Order = when {
                 savedInstanceState?.containsKey(ORDER) == true -> savedInstanceState[ORDER] as Order
@@ -82,16 +83,23 @@ class OrderedByActivity : BaseActivity() {
         }
     }
 
+    private fun onMoviesEvent(event: Event<List<Movie>>) {
+        when (event) {
+            is Event.Data -> {
+                moviesListView.isRefreshing = false
+                adapter.submitList(event.data)
+            }
+            is Event.Loading -> moviesListView.takeUnless { it.isRefreshing }?.isRefreshing = true
+            is Event.Error -> moviesListView.showFeedbackStatus(getString(event.message(event.error)))
+        }
+    }
+
     private fun showError(error: Event.Error?) {
 
         error?.let {
             when (it.error) {
                 OrderByError.EMPTY_ORDER -> showOrderChooserDialog()
-                RemoteError.CONNECTION_LOST -> if (viewModel.movies.value.isNullOrEmpty()) {
-                    moviesListView.showFeedbackStatus(getString(error.message(it.error)))
-                } else {
-                    adapter.showLoadMoreError()
-                }
+                RemoteError.CONNECTION_LOST -> adapter.showLoadMoreError()
                 else -> moviesListView.showFeedbackStatus(getString(error.message(it.error)))
             }
         }
