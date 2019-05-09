@@ -27,29 +27,42 @@ abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<Re
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    recyclerView.layoutManager?.also {
+                        val firstVisibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
 
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-
-                    if (
-                            !loading &&
-                            loadEnable &&
-                            (visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - 5)
-                    ) {
-                        loading = true
-                        loadMoreListener?.onLoadMore()
+                        if (
+                                !loading &&
+                                loadEnable &&
+                                ((it.childCount + firstVisibleItemPosition) >= (it.itemCount - 5))
+                        ) {
+                            loading = true
+                            loadMoreListener?.onLoadMore()
+                        }
                     }
                 }
             }
 
+    private val spanSizeManager = object : GridLayoutManager.SpanSizeLookup() {
+
+        var spanCount:Int = 0
+
+        override fun getSpanSize(position: Int): Int {
+            return if(getItemViewType(position) == ITEM_VIEW) {
+                1
+            } else {
+                spanCount
+            }
+        }
+    }
+
     constructor(diffCallback: DiffUtil.ItemCallback<T>) {
+
         helper = AsyncListDiffer(AdapterListUpdateCallback(this),
                 AsyncDifferConfig.Builder(diffCallback).build())
     }
 
     constructor(config: AsyncDifferConfig<T>) {
+
         helper = AsyncListDiffer(AdapterListUpdateCallback(this), config)
     }
 
@@ -82,8 +95,14 @@ abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<Re
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+
         super.onAttachedToRecyclerView(recyclerView)
         recyclerView.addOnScrollListener(scrollListener)
+        (recyclerView.layoutManager as? GridLayoutManager)
+                ?.also {
+                    this.spanSizeManager.spanCount = it.spanCount
+                    it.spanSizeLookup = this.spanSizeManager
+                }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -107,15 +126,18 @@ abstract class PagedAdapter<T, VH : BaseViewHolder<T>> : RecyclerView.Adapter<Re
     }
 
     fun showLoadMoreError() {
+
         notifyDataSetChanged()
         errorState = true
     }
 
     protected fun getItem(position: Int): T {
+
         return helper.currentList[position]
     }
 
     override fun getItemCount(): Int {
+
         return helper.currentList.size.let {
             if (loadEnable && it > 0) it + 1 else it
         }
