@@ -67,7 +67,6 @@ class OrderedByActivity : BaseActivity() {
 
         viewModel.currentOrder.observe(this, Observer { setupView(it) })
         viewModel.movies.observe(this, Observer { onMoviesEvent(it) })
-        //viewModel.refreshLoading.observe(this, Observer { moviesListView.isRefreshing = it })
         viewModel.error.observe(this, Observer { showError(it) })
         viewModel.hasNextPage.observe(this, Observer { adapter.loadEnable = it })
 

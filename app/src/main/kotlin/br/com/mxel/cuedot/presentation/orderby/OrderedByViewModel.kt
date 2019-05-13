@@ -66,8 +66,7 @@ class OrderedByViewModel(
     fun loadMore() {
         if (currentPage < totalPages) {
 
-            currentPage++
-            getMoviesOrderedBy.execute(_currentOrder.value!!, currentPage)
+            getMoviesOrderedBy.execute(_currentOrder.value!!, currentPage + 1)
                     .subscribeOn(scheduler.backgroundThread)
                     .map { event ->
                         (event as? Event.Data)?.data?.let {
