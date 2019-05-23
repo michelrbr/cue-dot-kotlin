@@ -2,8 +2,8 @@ package br.com.mxel.cuedot.presentation.orderby
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import br.com.mxel.cuedot.domain.Event
 import br.com.mxel.cuedot.domain.SchedulerProvider
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.entity.MovieList
 import br.com.mxel.cuedot.domain.orderby.GetMoviesOrderedBy
@@ -28,19 +28,19 @@ class OrderedByViewModel(
     val hasNextPage: LiveData<Boolean>
         get() = _hasNextPage
 
-    private val _movies = MutableLiveData<Event<List<Movie>>>().apply { value = Event.idle() }
-    val movies: LiveData<Event<List<Movie>>>
+    private val _movies = MutableLiveData<State<List<Movie>>>().apply { value = State.idle() }
+    val movies: LiveData<State<List<Movie>>>
         get() = _movies
 
-    private val _error = MutableLiveData<Event.Error?>().apply { value = null }
-    val error: LiveData<Event.Error?>
+    private val _error = MutableLiveData<State.Error?>().apply { value = null }
+    val error: LiveData<State.Error?>
         get() = _error
 
     fun refresh() {
         if (_currentOrder.value != null) {
             getMovies(_currentOrder.value!!)
         } else {
-            _error.value = Event.Error(OrderByError.EMPTY_ORDER)
+            _error.value = State.Error(OrderByError.EMPTY_ORDER)
         }
     }
 
@@ -55,9 +55,9 @@ class OrderedByViewModel(
                 .subscribeOn(scheduler.backgroundThread)
                 .subscribe {
                     when (it) {
-                        is Event.Data -> setupProperties(it)
-                        is Event.Loading -> _movies.postValue(it)
-                        is Event.Error -> _movies.postValue(it)
+                        is State.Data -> setupProperties(it)
+                        is State.Loading -> _movies.postValue(it)
+                        is State.Error -> _movies.postValue(it)
                     }
                     checkIfCanDispose(it)
                 }.addTo(disposable)
@@ -68,17 +68,17 @@ class OrderedByViewModel(
 
             getMoviesOrderedBy.execute(_currentOrder.value!!, currentPage + 1)
                     .subscribeOn(scheduler.backgroundThread)
-                    .map { event ->
-                        (event as? Event.Data)?.data?.let {
-                            val cList = (_movies.value as? Event.Data)?.data ?: emptyList()
+                    .map { state ->
+                        (state as? State.Data)?.data?.let {
+                            val cList = (_movies.value as? State.Data)?.data ?: emptyList()
                             val nList = it.movies ?: emptyList()
 
-                            Event.data(it.copy(movies = cList + nList))
-                        } ?: event
+                            State.data(it.copy(movies = cList + nList))
+                        } ?: state
                     }.subscribe {
                         when (it) {
-                            is Event.Data -> setupProperties(it)
-                            is Event.Error -> _error.postValue(it)
+                            is State.Data -> setupProperties(it)
+                            is State.Error -> _error.postValue(it)
                         }
                         checkIfCanDispose(it)
                     }.addTo(disposable)
@@ -87,10 +87,10 @@ class OrderedByViewModel(
         }
     }
 
-    private fun setupProperties(event: Event.Data<MovieList>) {
-        totalPages = event.data.totalPages
-        currentPage = event.data.page
+    private fun setupProperties(state: State.Data<MovieList>) {
+        totalPages = state.data.totalPages
+        currentPage = state.data.page
         _hasNextPage.postValue(currentPage < totalPages)
-        _movies.postValue(Event.data(event.data.movies ?: emptyList()))
+        _movies.postValue(State.data(state.data.movies ?: emptyList()))
     }
 }

@@ -1,7 +1,7 @@
 package br.com.mxel.cuedot.domain.orderby
 
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.MovieList
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -23,24 +23,24 @@ class OrderByTest : BaseTest() {
         val expectedMovieList = MovieList(1, 3, 1, null)
 
         every { repository.getMoviesOrderedBy(any(), any()) } returns
-                Single.just(Event.data(expectedMovieList))
+                Single.just(State.data(expectedMovieList))
 
         getMoviesOrderedBy.execute(Order.POPULAR, 1)
                 .test()
-                .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Data).data == expectedMovieList }
+                .assertValueAt(0) { it is State.Loading }
+                .assertValueAt(1) { (it as State.Data).data == expectedMovieList }
     }
 
     @Test
     fun `Should get error`() {
 
         every { repository.getMoviesOrderedBy(any(), any()) } returns
-                Single.just(Event.error())
+                Single.just(State.error())
 
         getMoviesOrderedBy.execute(Order.NOW_PLAYING, 1)
                 .test()
-                .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { it is Event.Error }
+                .assertValueAt(0) { it is State.Loading }
+                .assertValueAt(1) { it is State.Error }
     }
 
     @Test
@@ -48,7 +48,7 @@ class OrderByTest : BaseTest() {
 
         getMoviesOrderedBy.execute(Order.NOW_PLAYING, 0)
                 .test()
-                .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Error).error == OrderByError.INVALID_PAGE }
+                .assertValueAt(0) { it is State.Loading }
+                .assertValueAt(1) { (it as State.Error).error == OrderByError.INVALID_PAGE }
     }
 }

@@ -1,7 +1,7 @@
 package br.com.mxel.cuedot.domain.search
 
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.MovieList
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -23,12 +23,12 @@ class SearchTest: BaseTest() {
         val expectedMovieList = MovieList(1, 3, 1, null)
 
         every { repository.searchMovie(any()) } returns
-                Single.just(Event.data(expectedMovieList))
+                Single.just(State.data(expectedMovieList))
 
         searchMovie.execute("test")
                 .test()
-                .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Data).data == expectedMovieList }
+                .assertValueAt(0) { it is State.Loading }
+                .assertValueAt(1) { (it as State.Data).data == expectedMovieList }
     }
 
     @Test
@@ -36,7 +36,7 @@ class SearchTest: BaseTest() {
 
         searchMovie.execute("")
                 .test()
-                .assertValueAt(0) { it is Event.Loading }
-                .assertValueAt(1) { (it as Event.Error).error == SearchError.EMPTY_QUERY }
+                .assertValueAt(0) { it is State.Loading }
+                .assertValueAt(1) { (it as State.Error).error == SearchError.EMPTY_QUERY }
     }
 }

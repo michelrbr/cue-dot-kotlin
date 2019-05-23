@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.data.remote.RemoteError
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.domain.orderby.OrderByError
@@ -66,11 +66,11 @@ class OrderedByActivity : BaseActivity() {
         }
 
         viewModel.currentOrder.observe(this, Observer { setupView(it) })
-        viewModel.movies.observe(this, Observer { onMoviesEvent(it) })
+        viewModel.movies.observe(this, Observer { onMoviesState(it) })
         viewModel.error.observe(this, Observer { showError(it) })
         viewModel.hasNextPage.observe(this, Observer { adapter.loadEnable = it })
 
-        if (viewModel.movies.value is Event.Idle) {
+        if (viewModel.movies.value is State.Idle) {
 
             val currentOrder: Order = when {
                 savedInstanceState?.containsKey(ORDER) == true -> savedInstanceState[ORDER] as Order
@@ -82,18 +82,18 @@ class OrderedByActivity : BaseActivity() {
         }
     }
 
-    private fun onMoviesEvent(event: Event<List<Movie>>) {
-        when (event) {
-            is Event.Data -> {
+    private fun onMoviesState(state: State<List<Movie>>) {
+        when (state) {
+            is State.Data -> {
                 moviesListView.isRefreshing = false
-                adapter.submitList(event.data)
+                adapter.submitList(state.data)
             }
-            is Event.Loading -> moviesListView.takeUnless { it.isRefreshing }?.isRefreshing = true
-            is Event.Error -> moviesListView.showFeedbackStatus(getString(event.message(event.error)))
+            is State.Loading -> moviesListView.takeUnless { it.isRefreshing }?.isRefreshing = true
+            is State.Error -> moviesListView.showFeedbackStatus(getString(state.message(state.error)))
         }
     }
 
-    private fun showError(error: Event.Error?) {
+    private fun showError(error: State.Error?) {
 
         error?.let {
             when (it.error) {

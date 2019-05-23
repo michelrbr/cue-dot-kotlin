@@ -5,7 +5,7 @@ import br.com.mxel.cuedot.data.orderby.remote.OrderedByRemoteData
 import br.com.mxel.cuedot.data.orderby.remote.TestOrderByInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.orderby.Order
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Test
@@ -29,7 +29,7 @@ class OrderByRepositoryTest : BaseTest() {
 
         repository.getMoviesOrderedBy(Order.POPULAR, 1)
                 .test()
-                .assertValue { (it as Event.Data).data.movies!!.isNotEmpty() }
+                .assertValue { (it as State.Data).data.movies!!.isNotEmpty() }
     }
 
 }

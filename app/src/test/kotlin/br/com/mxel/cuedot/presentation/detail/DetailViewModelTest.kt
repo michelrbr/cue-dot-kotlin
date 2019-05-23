@@ -2,10 +2,10 @@ package br.com.mxel.cuedot.presentation.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import br.com.mxel.cuedot.koin.detailModule
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.Movie
+import br.com.mxel.cuedot.koin.detailModule
 import io.mockk.impl.annotations.RelaxedMockK
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -22,7 +22,7 @@ class DetailViewModelTest : BaseTest(), KoinTest {
     private val viewModel: DetailViewModel by inject()
 
     @RelaxedMockK
-    lateinit var movieObserver: Observer<Event<Movie>>
+    lateinit var movieObserver: Observer<State<Movie>>
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -45,6 +45,6 @@ class DetailViewModelTest : BaseTest(), KoinTest {
 
         viewModel.getMovieDetail(100)
 
-        assertEquals((viewModel.movie.value as Event.Data).data.id, 100)
+        assertEquals((viewModel.movie.value as State.Data).data.id, 100)
     }
 }

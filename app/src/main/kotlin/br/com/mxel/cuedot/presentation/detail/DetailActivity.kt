@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.presentation.base.BaseActivity
 import butterknife.BindView
@@ -78,14 +78,14 @@ class DetailActivity : BaseActivity() {
             }
         })
 
-        viewModel.movie.observe(this, Observer { onMovieEvent(it) })
+        viewModel.movie.observe(this, Observer { onMovieState(it) })
     }
 
-    private fun onMovieEvent(event: Event<Movie>) {
+    private fun onMovieState(state: State<Movie>) {
 
-        when (event) {
-            is Event.Idle -> viewModel.getMovieDetail(movieId)
-            is Event.Data -> setupView(event.data)
+        when (state) {
+            is State.Idle -> viewModel.getMovieDetail(movieId)
+            is State.Data -> setupView(state.data)
         }
     }
 

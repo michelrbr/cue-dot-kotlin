@@ -2,10 +2,11 @@ package br.com.mxel.cuedot.presentation.orderby
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import br.com.mxel.cuedot.koin.orderByModule
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
+import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.orderby.Order
+import br.com.mxel.cuedot.koin.orderByModule
 import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
@@ -28,13 +29,10 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
     lateinit var orderObserver: Observer<Order>
 
     @RelaxedMockK
-    lateinit var refreshObserver: Observer<Boolean>
-
-    @RelaxedMockK
     lateinit var nextPageObserver: Observer<Boolean>
 
     @RelaxedMockK
-    lateinit var errorObserver: Observer<Event.Error?>
+    lateinit var errorObserver: Observer<State.Error?>
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -54,13 +52,12 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
     fun `Should load more movies`() {
 
         viewModel.currentOrder.observeForever(orderObserver)
-        viewModel.refreshLoading.observeForever(refreshObserver)
         viewModel.hasNextPage.observeForever(nextPageObserver)
         viewModel.error.observeForever(errorObserver)
 
         viewModel.getMovies(Order.POPULAR)
 
-        assertEquals(viewModel.movies.value?.size, 20)
+        assertEquals((viewModel.movies.value as State.Data<List<Movie>>).data.size, 20)
 
         viewModel.loadMore()
 
@@ -72,17 +69,10 @@ class OrderedByViewModelTest : BaseTest(), KoinTest {
             nextPageObserver.onChanged(false)
         }
 
-        verifySequence {
-            refreshObserver.onChanged(false)
-            refreshObserver.onChanged(true)
-            refreshObserver.onChanged(false)
-        }
-
         verify(exactly = 1) { errorObserver.onChanged(null) }
 
-        assertEquals(viewModel.movies.value?.size, 40)
+        assertEquals((viewModel.movies.value as State.Data<List<Movie>>).data.size, 40)
 
         confirmVerified(nextPageObserver)
-        confirmVerified(refreshObserver)
     }
 }

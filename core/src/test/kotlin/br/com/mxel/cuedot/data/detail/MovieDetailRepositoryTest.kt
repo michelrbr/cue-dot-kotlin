@@ -6,7 +6,7 @@ import br.com.mxel.cuedot.data.detail.remote.TestMovieDetailInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
 import br.com.mxel.cuedot.data.remote.RemoteError
 import br.com.mxel.cuedot.domain.BaseTest
-import br.com.mxel.cuedot.domain.Event
+import br.com.mxel.cuedot.domain.State
 import io.mockk.impl.annotations.InjectMockKs
 import org.junit.Test
 
@@ -29,13 +29,13 @@ class MovieDetailRepositoryTest : BaseTest() {
 
         repository.getMovie(100)
                 .test()
-                .assertValue { (it as Event.Data).data.id == 100L }
+                .assertValue { (it as State.Data).data.id == 100L }
     }
 
     @Test
     fun `Should get movie not found error`() {
         repository.getMovie(10)
                 .test()
-                .assertValue { (it as Event.Error).error == RemoteError.RESOURCE_NOT_FOUND }
+                .assertValue { (it as State.Error).error == RemoteError.RESOURCE_NOT_FOUND }
     }
 }
