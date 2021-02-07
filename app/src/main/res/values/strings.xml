@@ -22,4 +22,6 @@
     <string name="generic_error">Sorry, an error has occurred</string>
     <string name="empty_order">You need to choose a category to list movies</string>
     <string name="try_again">Try again</string>
+    <string name="title_detail">Movie Detail</string>
+    <string name="title_activity_movie_detail">Movie detail</string>
 </resources>

@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="CueDotTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="CueDotTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="CueDotTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

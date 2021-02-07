@@ -12,12 +12,12 @@ import br.com.mxel.cuedot.data.orderby.remote.IOrderedByRemoteData
 import br.com.mxel.cuedot.data.orderby.remote.OrderedByRemoteData
 import br.com.mxel.cuedot.data.remote.MovieInterceptor
 import br.com.mxel.cuedot.data.remote.RemoteClientFactory
+import br.com.mxel.cuedot.detail.presentation.DetailViewModel
 import br.com.mxel.cuedot.domain.SchedulerProvider
 import br.com.mxel.cuedot.domain.detail.GetMovieDetail
 import br.com.mxel.cuedot.domain.detail.IMovieDetailRepository
 import br.com.mxel.cuedot.domain.orderby.GetMoviesOrderedBy
 import br.com.mxel.cuedot.domain.orderby.IOrderedByRepository
-import br.com.mxel.cuedot.presentation.detail.DetailViewModel
 import br.com.mxel.cuedot.presentation.orderby.OrderedByViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

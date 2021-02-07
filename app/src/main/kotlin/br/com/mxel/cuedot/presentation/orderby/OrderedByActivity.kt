@@ -10,19 +10,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import br.com.mxel.cuedot.R
 import br.com.mxel.cuedot.data.remote.RemoteError
+import br.com.mxel.cuedot.detail.presentation.MovieDetailActivity
 import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.Movie
 import br.com.mxel.cuedot.domain.orderby.Order
 import br.com.mxel.cuedot.domain.orderby.OrderByError
 import br.com.mxel.cuedot.extension.message
 import br.com.mxel.cuedot.presentation.base.BaseActivity
-import br.com.mxel.cuedot.presentation.detail.DetailActivity
 import br.com.mxel.cuedot.presentation.orderby.widget.MovieListAdapter
 import br.com.mxel.cuedot.presentation.widget.ListLayout
 import br.com.mxel.cuedot.presentation.widget.PagedAdapter
-import butterknife.BindArray
-import butterknife.BindView
-import butterknife.ButterKnife
 import io.reactivex.rxkotlin.addTo
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -32,20 +29,23 @@ class OrderedByActivity : BaseActivity() {
 
     private val adapter = MovieListAdapter()
 
-    @BindArray(R.array.order_by_list)
     lateinit var orderArray: Array<String>
 
-    // UI
-    @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
-    @BindView(R.id.movie_list)
+
     lateinit var moviesListView: ListLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.ordered_by_activity)
 
-        unbinder = ButterKnife.bind(this)
+        //unbinder = ButterKnife.bind(this)
+
+        moviesListView = findViewById(R.id.movie_list)
+
+        toolbar = findViewById(R.id.toolbar)
+
+        orderArray = resources.getStringArray(R.array.order_by_list)
 
         setSupportActionBar(toolbar)
 
@@ -56,7 +56,7 @@ class OrderedByActivity : BaseActivity() {
         }
 
         adapter.notifyMovieClick.subscribe {
-            DetailActivity.launch(this, it.id)
+            MovieDetailActivity.launch(this, it.id)
         }.addTo(disposable)
 
         moviesListView.adapter = adapter
@@ -109,14 +109,14 @@ class OrderedByActivity : BaseActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putSerializable(ORDER, viewModel.currentOrder.value)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(ORDER, viewModel.currentOrder.value)
         super.onSaveInstanceState(outState)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (item?.itemId == R.id.action_order_by) {
+        if (item.itemId == R.id.action_order_by) {
             showOrderChooserDialog()
         }
         return super.onOptionsItemSelected(item)

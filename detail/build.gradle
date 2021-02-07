@@ -1,26 +1,24 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-
-def props = new Properties()
-try {
-    def propsFile = rootProject.file('local.properties')
-    props.load(new FileInputStream(propsFile))
-} catch (ignored) {
-    props['apiKey'] = '~'
+plugins {
+    //id 'com.android.dynamic-feature'
+    id 'com.android.library'
+    id 'kotlin-android'
 }
-
 android {
     compileSdkVersion androidSdkVersion
+    buildToolsVersion "30.0.2"
+
     defaultConfig {
-        applicationId "br.com.mxel.cuedot"
+        //applicationId "br.com.mxel.cuedot.detail"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "API_KEY", props['apiKey']
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     sourceSets {
@@ -37,48 +35,37 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    //dynamicFeatures = [':detail']
 }
 
 dependencies {
+    //implementation project(":app")
     implementation project(':core')
-    implementation project(':detail')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-
-    // Android
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.recyclerview:recyclerview:$recycleViewVersion"
-    implementation "com.google.android.material:material:$androidSupportVersion"
+    implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidLifecycleVersion"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
-    kapt "androidx.lifecycle:lifecycle-compiler:$androidLifecycleVersion"
-
-    // RX
-    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleViewmodelVersion"
 
     // Log
     implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // Image loader
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesVersion"
 
     // DI
     implementation "org.koin:koin-core:$koinVersion"
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-android-viewmodel:$koinVersion"
     implementation "org.koin:koin-android-scope:$koinVersion"
-    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
-    kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
-
-    // HTTP
-    implementation "com.squareup.picasso:picasso:$picassoVersion"
-
-    // Leak canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Test
     testImplementation project(path: ':core', configuration: 'testOutput')
@@ -87,6 +74,7 @@ dependencies {
     testImplementation "org.koin:koin-test:$koinVersion"
     testImplementation "androidx.test.ext:junit:$junitXVersion"
     testImplementation "androidx.arch.core:core-testing:$testArchVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }
