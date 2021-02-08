@@ -21,6 +21,7 @@ import br.com.mxel.cuedot.domain.orderby.IOrderedByRepository
 import br.com.mxel.cuedot.presentation.orderby.OrderedByViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.experimental.builder.viewModel
 import org.koin.dsl.module.module
@@ -44,9 +45,9 @@ val networkModule = module {
 
     single {
         RemoteClientFactory(
-                getCacheDir(androidContext()),
-                MovieInterceptor(get(API_KEY)),
-                get(IS_DEBUG)
+            getCacheDir(androidContext()),
+            MovieInterceptor(get(API_KEY)),
+            get(IS_DEBUG)
         )
     }
 }
@@ -73,6 +74,8 @@ val detailModule = module {
     singleBy<IMovieDetailRepository, MovieDetailRepository>()
 
     factory<GetMovieDetail>()
+
+    single { Dispatchers.IO }
 
     viewModel<DetailViewModel>()
 }
