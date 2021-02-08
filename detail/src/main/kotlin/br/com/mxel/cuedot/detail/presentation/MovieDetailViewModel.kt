@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.awaitLast
 
-class DetailViewModel(
+class MovieDetailViewModel(
     private val dispatcher: CoroutineDispatcher,
     private val getMovieDetail: GetMovieDetail
 ) : ViewModel() {

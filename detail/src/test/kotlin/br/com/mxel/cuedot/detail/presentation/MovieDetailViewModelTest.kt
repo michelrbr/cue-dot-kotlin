@@ -23,7 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class DetailViewModelTest {
+class MovieDetailViewModelTest {
 
 
     private val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
@@ -32,7 +32,7 @@ class DetailViewModelTest {
     lateinit var getMovieDetail: GetMovieDetail
 
     @InjectMockKs
-    lateinit var viewModel: DetailViewModel
+    lateinit var viewModelMovie: MovieDetailViewModel
 
     @RelaxedMockK
     lateinit var movieObserver: Observer<State<Movie>>
@@ -60,11 +60,11 @@ class DetailViewModelTest {
 
         every { getMovieDetail.execute(any()) } returns Observable.just(State.data(expectedMovie))
 
-        viewModel.movie.observeForever(movieObserver)
+        viewModelMovie.movie.observeForever(movieObserver)
 
-        viewModel.getMovieDetail(100)
+        viewModelMovie.getMovieDetail(100)
 
-        assertEquals((viewModel.movie.value as State.Data).data, expectedMovie)
+        assertEquals((viewModelMovie.movie.value as State.Data).data, expectedMovie)
     }
 
     @Test
@@ -72,10 +72,10 @@ class DetailViewModelTest {
 
         every { getMovieDetail.execute(any()) } returns Observable.just(State.error())
 
-        viewModel.movie.observeForever(movieObserver)
+        viewModelMovie.movie.observeForever(movieObserver)
 
-        viewModel.getMovieDetail(100)
+        viewModelMovie.getMovieDetail(100)
 
-        assertEquals((viewModel.movie.value as State.Error).error, IError.GENERIC_ERROR)
+        assertEquals((viewModelMovie.movie.value as State.Error).error, IError.GENERIC_ERROR)
     }
 }

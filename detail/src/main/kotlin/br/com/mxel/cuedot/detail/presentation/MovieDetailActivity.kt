@@ -13,7 +13,8 @@ import br.com.mxel.cuedot.domain.State
 import br.com.mxel.cuedot.domain.entity.Movie
 import com.google.android.material.appbar.AppBarLayout
 import com.squareup.picasso.Picasso
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -21,7 +22,8 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private val movieId: Long by lazy { intent.getLongExtra(MOVIE_ID, 0L) }
 
-    private val viewModel: DetailViewModel by viewModel()
+    @Inject
+    lateinit var viewModelMovie: MovieDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,8 @@ class MovieDetailActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        AndroidInjection.inject(this)
 
         supportActionBar?.apply {
             setHomeAsUpIndicator(R.drawable.ic_arrow_white_24dp)
@@ -54,7 +58,7 @@ class MovieDetailActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.movie.observe(this, Observer { onMovieState(it) })
+        viewModelMovie.movie.observe(this, Observer { onMovieState(it) })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,7 +77,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun onMovieState(state: State<Movie>) {
 
         when (state) {
-            is State.Idle -> viewModel.getMovieDetail(movieId)
+            is State.Idle -> viewModelMovie.getMovieDetail(movieId)
             is State.Data -> setupView(state.data)
         }
     }
