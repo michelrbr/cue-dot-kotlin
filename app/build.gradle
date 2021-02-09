@@ -55,9 +55,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recycleViewVersion"
     implementation "com.google.android.material:material:$androidSupportVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout"
-    kapt "androidx.lifecycle:lifecycle-compiler:$androidLifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
 
     // RX
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"

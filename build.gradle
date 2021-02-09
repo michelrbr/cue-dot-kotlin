@@ -22,8 +22,7 @@ buildscript {
     ext.recycleViewVersion = "1.1.0"
     ext.swipeRefreshLayout = "1.1.0"
     ext.androidSupportVersion = "1.2.1"
-    ext.androidLifecycleVersion = "2.0.0"
-    ext.lifecycleViewmodelVersion = "2.2.0"
+    ext.lifecycleVersion = "2.2.0"
 
     // DI
     ext.koinVersion = "1.0.2"

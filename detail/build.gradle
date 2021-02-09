@@ -49,7 +49,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleViewmodelVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     // Log
     implementation "com.jakewharton.timber:timber:$timberVersion"
@@ -72,7 +73,6 @@ dependencies {
     testImplementation project(path: ':core', configuration: 'testOutput')
     testImplementation "junit:junit:$junitVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"
-    testImplementation "org.koin:koin-test:$koinVersion"
     testImplementation "androidx.test.ext:junit:$junitXVersion"
     testImplementation "androidx.arch.core:core-testing:$testArchVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
